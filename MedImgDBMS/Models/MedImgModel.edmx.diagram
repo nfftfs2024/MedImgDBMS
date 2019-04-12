@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ac94d3a0add44bc18aee68d65df723f6" Name="Diagram1">
+        <EntityTypeShape EntityType="pjmedimgdbModel.account" Width="1.5" PointX="5.25" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.comment" Width="1.5" PointX="8.25" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.image" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.imagestatu" Width="1.5" PointX="3" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.patient" Width="1.5" PointX="3" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.report" Width="1.5" PointX="7.5" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.role" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.user" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_User_Acct" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_Img_Cmt" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_User_Cmt" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_Img_Rep" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_Pat_Img" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_Stat_Img" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_User_Img_C" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_User_Img_D" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_User_Img_E" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_User_Rep" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_Role_User" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

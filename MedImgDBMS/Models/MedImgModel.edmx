@@ -1,0 +1,691 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="pjmedimgdbModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="AcctID" />
+          </Key>
+          <Property Name="AcctID" Type="uint" Nullable="false" />
+          <Property Name="AcctLName" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="AcctPasswd" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="AcctStatus" Type="enum" Nullable="false" />
+          <Property Name="AcctCreateTime" Type="timestamp" Precision="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="comment">
+          <Key>
+            <PropertyRef Name="CmtID" />
+            <PropertyRef Name="CmtSeq" />
+          </Key>
+          <Property Name="CmtID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CmtSeq" Type="uint" Nullable="false" />
+          <Property Name="CmtText" Type="text" Nullable="false" />
+          <Property Name="CmtCreateTime" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="CmtCreator" Type="uint" Nullable="false" />
+          <Property Name="ImgID" Type="uint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="image">
+          <Key>
+            <PropertyRef Name="ImgID" />
+          </Key>
+          <Property Name="ImgID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ImgPath" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="ImgName" Type="varchar" MaxLength="50" />
+          <Property Name="ImgCreateTime" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="ImgCreator" Type="uint" Nullable="false" />
+          <Property Name="ImgExpID" Type="uint" />
+          <Property Name="ImgDocID" Type="uint" />
+          <Property Name="ImgPatID" Type="uint" Nullable="false" />
+          <Property Name="StatusID" Type="uint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="imagestatus">
+          <Key>
+            <PropertyRef Name="ImgStatID" />
+          </Key>
+          <Property Name="ImgStatID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StatusName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="patient">
+          <Key>
+            <PropertyRef Name="PatID" />
+          </Key>
+          <Property Name="PatID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PatLName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PatFName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="DOB" Type="date" />
+          <Property Name="Gender" Type="enum" />
+        </EntityType>
+        <EntityType Name="report">
+          <Key>
+            <PropertyRef Name="RepID" />
+          </Key>
+          <Property Name="RepID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RepPath" Type="varchar" MaxLength="80" />
+          <Property Name="RepText" Type="text" Nullable="false" />
+          <Property Name="RepCreateTime" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="RepCreator" Type="uint" Nullable="false" />
+          <Property Name="ImgID" Type="uint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserLName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="UserFName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="UserRoleID" Type="uint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Img_Cmt">
+          <End Role="image" Type="Self.image" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="comment" Type="Self.comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="image">
+              <PropertyRef Name="ImgID" />
+            </Principal>
+            <Dependent Role="comment">
+              <PropertyRef Name="ImgID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Img_Rep">
+          <End Role="image" Type="Self.image" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="report" Type="Self.report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="image">
+              <PropertyRef Name="ImgID" />
+            </Principal>
+            <Dependent Role="report">
+              <PropertyRef Name="ImgID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pat_Img">
+          <End Role="patient" Type="Self.patient" Multiplicity="1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="patient">
+              <PropertyRef Name="PatID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="ImgPatID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role_User">
+          <End Role="role" Type="Self.role" Multiplicity="1" />
+          <End Role="user" Type="Self.user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="user">
+              <PropertyRef Name="UserRoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Stat_Img">
+          <End Role="imagestatus" Type="Self.imagestatus" Multiplicity="1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="imagestatus">
+              <PropertyRef Name="ImgStatID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Acct">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="AcctID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Cmt">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="comment" Type="Self.comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="comment">
+              <PropertyRef Name="CmtCreator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Img_C">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="ImgCreator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Img_D">
+          <End Role="user" Type="Self.user" Multiplicity="0..1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="ImgDocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Img_E">
+          <End Role="user" Type="Self.user" Multiplicity="0..1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="ImgExpID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Rep">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="report" Type="Self.report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="report">
+              <PropertyRef Name="RepCreator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="pjmedimgdbModelStoreContainer">
+          <EntitySet Name="account" EntityType="Self.account" Schema="pjmedimgdb" store:Type="Tables" />
+          <EntitySet Name="comment" EntityType="Self.comment" Schema="pjmedimgdb" store:Type="Tables" />
+          <EntitySet Name="image" EntityType="Self.image" Schema="pjmedimgdb" store:Type="Tables" />
+          <EntitySet Name="imagestatus" EntityType="Self.imagestatus" Schema="pjmedimgdb" store:Type="Tables" />
+          <EntitySet Name="patient" EntityType="Self.patient" Schema="pjmedimgdb" store:Type="Tables" />
+          <EntitySet Name="report" EntityType="Self.report" Schema="pjmedimgdb" store:Type="Tables" />
+          <EntitySet Name="role" EntityType="Self.role" Schema="pjmedimgdb" store:Type="Tables" />
+          <EntitySet Name="user" EntityType="Self.user" Schema="pjmedimgdb" store:Type="Tables" />
+          <AssociationSet Name="FK_Img_Cmt" Association="Self.FK_Img_Cmt">
+            <End Role="image" EntitySet="image" />
+            <End Role="comment" EntitySet="comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Img_Rep" Association="Self.FK_Img_Rep">
+            <End Role="image" EntitySet="image" />
+            <End Role="report" EntitySet="report" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pat_Img" Association="Self.FK_Pat_Img">
+            <End Role="patient" EntitySet="patient" />
+            <End Role="image" EntitySet="image" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role_User" Association="Self.FK_Role_User">
+            <End Role="role" EntitySet="role" />
+            <End Role="user" EntitySet="user" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Stat_Img" Association="Self.FK_Stat_Img">
+            <End Role="imagestatus" EntitySet="imagestatus" />
+            <End Role="image" EntitySet="image" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Acct" Association="Self.FK_User_Acct">
+            <End Role="user" EntitySet="user" />
+            <End Role="account" EntitySet="account" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Cmt" Association="Self.FK_User_Cmt">
+            <End Role="user" EntitySet="user" />
+            <End Role="comment" EntitySet="comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Img_C" Association="Self.FK_User_Img_C">
+            <End Role="user" EntitySet="user" />
+            <End Role="image" EntitySet="image" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Img_D" Association="Self.FK_User_Img_D">
+            <End Role="user" EntitySet="user" />
+            <End Role="image" EntitySet="image" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Img_E" Association="Self.FK_User_Img_E">
+            <End Role="user" EntitySet="user" />
+            <End Role="image" EntitySet="image" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Rep" Association="Self.FK_User_Rep">
+            <End Role="user" EntitySet="user" />
+            <End Role="report" EntitySet="report" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="pjmedimgdbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="AcctID" />
+          </Key>
+          <Property Name="AcctID" Type="Int64" Nullable="false" />
+          <Property Name="AcctLName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AcctPasswd" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AcctStatus" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AcctCreateTime" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="user" Relationship="Self.FK_User_Acct" FromRole="account" ToRole="user" />
+        </EntityType>
+        <EntityType Name="comment">
+          <Key>
+            <PropertyRef Name="CmtID" />
+            <PropertyRef Name="CmtSeq" />
+          </Key>
+          <Property Name="CmtID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CmtSeq" Type="Int64" Nullable="false" />
+          <Property Name="CmtText" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CmtCreateTime" Type="DateTime" Nullable="false" />
+          <Property Name="CmtCreator" Type="Int64" Nullable="false" />
+          <Property Name="ImgID" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="image" Relationship="Self.FK_Img_Cmt" FromRole="comment" ToRole="image" />
+          <NavigationProperty Name="user" Relationship="Self.FK_User_Cmt" FromRole="comment" ToRole="user" />
+        </EntityType>
+        <EntityType Name="image">
+          <Key>
+            <PropertyRef Name="ImgID" />
+          </Key>
+          <Property Name="ImgID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ImgPath" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ImgName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ImgCreateTime" Type="DateTime" Nullable="false" />
+          <Property Name="ImgCreator" Type="Int64" Nullable="false" />
+          <Property Name="ImgExpID" Type="Int64" />
+          <Property Name="ImgDocID" Type="Int64" />
+          <Property Name="ImgPatID" Type="Int64" Nullable="false" />
+          <Property Name="StatusID" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="comments" Relationship="Self.FK_Img_Cmt" FromRole="image" ToRole="comment" />
+          <NavigationProperty Name="reports" Relationship="Self.FK_Img_Rep" FromRole="image" ToRole="report" />
+          <NavigationProperty Name="patient" Relationship="Self.FK_Pat_Img" FromRole="image" ToRole="patient" />
+          <NavigationProperty Name="imagestatu" Relationship="Self.FK_Stat_Img" FromRole="image" ToRole="imagestatus" />
+          <NavigationProperty Name="user" Relationship="Self.FK_User_Img_C" FromRole="image" ToRole="user" />
+          <NavigationProperty Name="user1" Relationship="Self.FK_User_Img_D" FromRole="image" ToRole="user" />
+          <NavigationProperty Name="user2" Relationship="Self.FK_User_Img_E" FromRole="image" ToRole="user" />
+        </EntityType>
+        <EntityType Name="imagestatu">
+          <Key>
+            <PropertyRef Name="ImgStatID" />
+          </Key>
+          <Property Name="ImgStatID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StatusName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="images" Relationship="Self.FK_Stat_Img" FromRole="imagestatus" ToRole="image" />
+        </EntityType>
+        <EntityType Name="patient">
+          <Key>
+            <PropertyRef Name="PatID" />
+          </Key>
+          <Property Name="PatID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PatLName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PatFName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DOB" Type="DateTime" />
+          <Property Name="Gender" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="images" Relationship="Self.FK_Pat_Img" FromRole="patient" ToRole="image" />
+        </EntityType>
+        <EntityType Name="report">
+          <Key>
+            <PropertyRef Name="RepID" />
+          </Key>
+          <Property Name="RepID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RepPath" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="RepText" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RepCreateTime" Type="DateTime" Nullable="false" />
+          <Property Name="RepCreator" Type="Int64" Nullable="false" />
+          <Property Name="ImgID" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="image" Relationship="Self.FK_Img_Rep" FromRole="report" ToRole="image" />
+          <NavigationProperty Name="user" Relationship="Self.FK_User_Rep" FromRole="report" ToRole="user" />
+        </EntityType>
+        <EntityType Name="role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="users" Relationship="Self.FK_Role_User" FromRole="role" ToRole="user" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserLName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserFName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserRoleID" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="account" Relationship="Self.FK_User_Acct" FromRole="user" ToRole="account" />
+          <NavigationProperty Name="comments" Relationship="Self.FK_User_Cmt" FromRole="user" ToRole="comment" />
+          <NavigationProperty Name="images" Relationship="Self.FK_User_Img_C" FromRole="user" ToRole="image" />
+          <NavigationProperty Name="images1" Relationship="Self.FK_User_Img_D" FromRole="user" ToRole="image" />
+          <NavigationProperty Name="images2" Relationship="Self.FK_User_Img_E" FromRole="user" ToRole="image" />
+          <NavigationProperty Name="reports" Relationship="Self.FK_User_Rep" FromRole="user" ToRole="report" />
+          <NavigationProperty Name="role" Relationship="Self.FK_Role_User" FromRole="user" ToRole="role" />
+        </EntityType>
+        <Association Name="FK_User_Acct">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="AcctID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Img_Cmt">
+          <End Role="image" Type="Self.image" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="comment" Type="Self.comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="image">
+              <PropertyRef Name="ImgID" />
+            </Principal>
+            <Dependent Role="comment">
+              <PropertyRef Name="ImgID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Cmt">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="comment" Type="Self.comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="comment">
+              <PropertyRef Name="CmtCreator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Img_Rep">
+          <End Role="image" Type="Self.image" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="report" Type="Self.report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="image">
+              <PropertyRef Name="ImgID" />
+            </Principal>
+            <Dependent Role="report">
+              <PropertyRef Name="ImgID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pat_Img">
+          <End Role="patient" Type="Self.patient" Multiplicity="1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="patient">
+              <PropertyRef Name="PatID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="ImgPatID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Stat_Img">
+          <End Role="imagestatus" Type="Self.imagestatu" Multiplicity="1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="imagestatus">
+              <PropertyRef Name="ImgStatID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Img_C">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="ImgCreator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Img_D">
+          <End Role="user" Type="Self.user" Multiplicity="0..1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="ImgDocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Img_E">
+          <End Role="user" Type="Self.user" Multiplicity="0..1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="ImgExpID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Rep">
+          <End Role="user" Type="Self.user" Multiplicity="1" />
+          <End Role="report" Type="Self.report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="report">
+              <PropertyRef Name="RepCreator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role_User">
+          <End Role="role" Type="Self.role" Multiplicity="1" />
+          <End Role="user" Type="Self.user" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="user">
+              <PropertyRef Name="UserRoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="pjmedimgdbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="accounts" EntityType="Self.account" />
+          <EntitySet Name="comments" EntityType="Self.comment" />
+          <EntitySet Name="images" EntityType="Self.image" />
+          <EntitySet Name="imagestatus" EntityType="Self.imagestatu" />
+          <EntitySet Name="patients" EntityType="Self.patient" />
+          <EntitySet Name="reports" EntityType="Self.report" />
+          <EntitySet Name="roles" EntityType="Self.role" />
+          <EntitySet Name="users" EntityType="Self.user" />
+          <AssociationSet Name="FK_User_Acct" Association="Self.FK_User_Acct">
+            <End Role="user" EntitySet="users" />
+            <End Role="account" EntitySet="accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Img_Cmt" Association="Self.FK_Img_Cmt">
+            <End Role="image" EntitySet="images" />
+            <End Role="comment" EntitySet="comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Cmt" Association="Self.FK_User_Cmt">
+            <End Role="user" EntitySet="users" />
+            <End Role="comment" EntitySet="comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Img_Rep" Association="Self.FK_Img_Rep">
+            <End Role="image" EntitySet="images" />
+            <End Role="report" EntitySet="reports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pat_Img" Association="Self.FK_Pat_Img">
+            <End Role="patient" EntitySet="patients" />
+            <End Role="image" EntitySet="images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Stat_Img" Association="Self.FK_Stat_Img">
+            <End Role="imagestatus" EntitySet="imagestatus" />
+            <End Role="image" EntitySet="images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Img_C" Association="Self.FK_User_Img_C">
+            <End Role="user" EntitySet="users" />
+            <End Role="image" EntitySet="images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Img_D" Association="Self.FK_User_Img_D">
+            <End Role="user" EntitySet="users" />
+            <End Role="image" EntitySet="images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Img_E" Association="Self.FK_User_Img_E">
+            <End Role="user" EntitySet="users" />
+            <End Role="image" EntitySet="images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Rep" Association="Self.FK_User_Rep">
+            <End Role="user" EntitySet="users" />
+            <End Role="report" EntitySet="reports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role_User" Association="Self.FK_Role_User">
+            <End Role="role" EntitySet="roles" />
+            <End Role="user" EntitySet="users" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="pjmedimgdbModelStoreContainer" CdmEntityContainer="pjmedimgdbEntities">
+          <EntitySetMapping Name="accounts">
+            <EntityTypeMapping TypeName="pjmedimgdbModel.account">
+              <MappingFragment StoreEntitySet="account">
+                <ScalarProperty Name="AcctID" ColumnName="AcctID" />
+                <ScalarProperty Name="AcctLName" ColumnName="AcctLName" />
+                <ScalarProperty Name="AcctPasswd" ColumnName="AcctPasswd" />
+                <ScalarProperty Name="AcctStatus" ColumnName="AcctStatus" />
+                <ScalarProperty Name="AcctCreateTime" ColumnName="AcctCreateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="comments">
+            <EntityTypeMapping TypeName="pjmedimgdbModel.comment">
+              <MappingFragment StoreEntitySet="comment">
+                <ScalarProperty Name="CmtID" ColumnName="CmtID" />
+                <ScalarProperty Name="CmtSeq" ColumnName="CmtSeq" />
+                <ScalarProperty Name="CmtText" ColumnName="CmtText" />
+                <ScalarProperty Name="CmtCreateTime" ColumnName="CmtCreateTime" />
+                <ScalarProperty Name="CmtCreator" ColumnName="CmtCreator" />
+                <ScalarProperty Name="ImgID" ColumnName="ImgID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="images">
+            <EntityTypeMapping TypeName="pjmedimgdbModel.image">
+              <MappingFragment StoreEntitySet="image">
+                <ScalarProperty Name="ImgID" ColumnName="ImgID" />
+                <ScalarProperty Name="ImgPath" ColumnName="ImgPath" />
+                <ScalarProperty Name="ImgName" ColumnName="ImgName" />
+                <ScalarProperty Name="ImgCreateTime" ColumnName="ImgCreateTime" />
+                <ScalarProperty Name="ImgCreator" ColumnName="ImgCreator" />
+                <ScalarProperty Name="ImgExpID" ColumnName="ImgExpID" />
+                <ScalarProperty Name="ImgDocID" ColumnName="ImgDocID" />
+                <ScalarProperty Name="ImgPatID" ColumnName="ImgPatID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="imagestatus">
+            <EntityTypeMapping TypeName="pjmedimgdbModel.imagestatu">
+              <MappingFragment StoreEntitySet="imagestatus">
+                <ScalarProperty Name="ImgStatID" ColumnName="ImgStatID" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="patients">
+            <EntityTypeMapping TypeName="pjmedimgdbModel.patient">
+              <MappingFragment StoreEntitySet="patient">
+                <ScalarProperty Name="PatID" ColumnName="PatID" />
+                <ScalarProperty Name="PatLName" ColumnName="PatLName" />
+                <ScalarProperty Name="PatFName" ColumnName="PatFName" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="reports">
+            <EntityTypeMapping TypeName="pjmedimgdbModel.report">
+              <MappingFragment StoreEntitySet="report">
+                <ScalarProperty Name="RepID" ColumnName="RepID" />
+                <ScalarProperty Name="RepPath" ColumnName="RepPath" />
+                <ScalarProperty Name="RepText" ColumnName="RepText" />
+                <ScalarProperty Name="RepCreateTime" ColumnName="RepCreateTime" />
+                <ScalarProperty Name="RepCreator" ColumnName="RepCreator" />
+                <ScalarProperty Name="ImgID" ColumnName="ImgID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="roles">
+            <EntityTypeMapping TypeName="pjmedimgdbModel.role">
+              <MappingFragment StoreEntitySet="role">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="pjmedimgdbModel.user">
+              <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserLName" ColumnName="UserLName" />
+                <ScalarProperty Name="UserFName" ColumnName="UserFName" />
+                <ScalarProperty Name="UserRoleID" ColumnName="UserRoleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
