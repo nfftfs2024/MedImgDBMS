@@ -1,0 +1,43 @@
+﻿@model MedImgDBMS.Models.account
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Login", "Login", FormMethod.Post))
+{
+    <fieldset>
+        <legend></legend>
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        @if (@ViewBag.Message != null)
+        {
+            <div style="border: 1px solid red">
+                @ViewBag.Message
+            </div>
+        }
+        <table align="center">
+            <tr>
+                <td>@Html.LabelFor(a => a.AcctLName)</td>
+                <td>@Html.TextBoxFor(a => a.AcctLName)</td>
+                <td>@Html.ValidationMessageFor(a => a.AcctLName)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(a => a.AcctPasswd)</td>
+                <td>@Html.PasswordFor(a => a.AcctPasswd)</td>
+                <td>@Html.ValidationMessageFor(a => a.AcctPasswd)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Login" />
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </fieldset>
+}
+
+
+
