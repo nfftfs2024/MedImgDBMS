@@ -24,32 +24,36 @@ namespace MedImgDBMS.Controllers
             {
                 using (pjmedimgdbEntities db = new pjmedimgdbEntities())
                 {
-                    var obj = db.accounts.Where(a => a.AcctLName.Equals(objUser.AcctLName) && a.AcctPasswd.Equals(objUser.AcctPasswd)).FirstOrDefault();
+                    var obj = db.accounts.Where(a => a.AcctLName.Equals(objUser.AcctLName) && a.AcctPasswd.Equals(objUser.AcctPasswd)).FirstOrDefault();    // Compare account name and passwd with DB
                     if (obj != null)
                     {
-                        Session["UserID"] = obj.AcctID.ToString();
-                        Session["AcctName"] = obj.AcctLName.ToString();
-                        string role = obj.user.UserRoleID.ToString();
-                        Session["UserRole"] = role;
-                        if (role == "1")
+                        Session["UserID"] = obj.AcctID.ToString();          // Get session user id
+                        Session["AcctName"] = obj.AcctLName.ToString();     // Get session account name
+
+                        string role = obj.user.UserRoleID.ToString();       
+                        Session["UserRole"] = role;                         // Get session user role
+
+                        if (role == "1")                                    // Redirect users to different pages
                         {
-                            return RedirectToAction("UserDashBoard");
+                            return RedirectToAction("AdminDashBoard");
                         }
-                        else if (role == "2")
-                        {
-                            return RedirectToAction("Index", "Images");
-                        }
-                        else if (role == "3")
+                        else
                         {
                             return RedirectToAction("Index", "Images");
                         }
+
+                        // Backup for different list pages for doctors and experts
+                        //else if (role == "3")
+                        //{
+                        //    return RedirectToAction("Index", "Images");
+                        //}
                     }
                 }
             }
             return View(objUser);
         }
 
-        public ActionResult UserDashBoard()
+        public ActionResult AdminDashBoard()             // For backup admin page
         {
             if (Session["UserID"] != null)
             {

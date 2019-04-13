@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MedImgDBMS.Models;
+using MedImgDBMS.ViewModels;
 
 namespace MedImgDBMS.Controllers
 {
@@ -17,8 +18,18 @@ namespace MedImgDBMS.Controllers
         // GET: Images
         public ActionResult Index()
         {
-            var images = db.images.Include(i => i.patient).Include(i => i.imagestatu).Include(i => i.user).Include(i => i.user1).Include(i => i.user2);
-            return View(images.ToList());
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+            var images = from img in db.images  
+                         where (img.ImgDocID == userID || img.ImgExpID == userID)
+                         select img;                                                                        // LINQ to select only user viewable images
+
+            if (images == null)                 // Condition for viewing empty image list
+                return View();
+            else                                // Condition for viewing image list
+                return View(images.ToList());
+
+            //DEFAULT
+            //var images = db.images.Include(i => i.patient).Include(i => i.imagestatu).Include(i => i.user).Include(i => i.user1).Include(i => i.user2);
         }
 
         // GET: Images/Details/5
