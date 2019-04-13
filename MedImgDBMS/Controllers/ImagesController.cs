@@ -32,6 +32,41 @@ namespace MedImgDBMS.Controllers
             //var images = db.images.Include(i => i.patient).Include(i => i.imagestatu).Include(i => i.user).Include(i => i.user1).Include(i => i.user2);
         }
 
+        // Doctor image view page
+        public ActionResult DocImageView(long? id)
+        {
+            image image = db.images.Find(id);
+            if (image == null)
+            {
+                return HttpNotFound();
+            }
+
+            string server = db.Database.Connection.DataSource.ToString();
+            string img_link = "http://" + server + "/" + image.ImgPath;
+            ViewBag.link = img_link;
+            return View(image);
+        }
+
+        // Expert image view page
+        public ActionResult ExpImageView(long? id)
+        {
+            image imgs = db.images.Find(id);                // Find images belong to user id in db
+            report reps = (from rep in db.reports
+                           where rep.ImgID == id
+                           select rep).FirstOrDefault();    // Find reports belong to this image
+
+            var view = new ImgRepViewModels()               // Initialise a view model for passing into view
+            {
+                Images = imgs,
+                Reports = reps
+            };
+
+            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
+            string img_link = "http://" + server + "/" + imgs.ImgPath;    // Concatenate image URL
+            ViewBag.link = img_link;                                      // Create viewbag variable for image URL
+            return View(view);
+        }
+
         // GET: Images/Details/5
         public ActionResult Details(long? id)
         {

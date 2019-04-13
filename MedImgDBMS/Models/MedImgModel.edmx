@@ -322,9 +322,9 @@
           <NavigationProperty Name="reports" Relationship="Self.FK_Img_Rep" FromRole="image" ToRole="report" />
           <NavigationProperty Name="patient" Relationship="Self.FK_Pat_Img" FromRole="image" ToRole="patient" />
           <NavigationProperty Name="imagestatu" Relationship="Self.FK_Stat_Img" FromRole="image" ToRole="imagestatus" />
-          <NavigationProperty Name="user" Relationship="Self.FK_User_Img_C" FromRole="image" ToRole="user" />
-          <NavigationProperty Name="user1" Relationship="Self.FK_User_Img_D" FromRole="image" ToRole="user" />
-          <NavigationProperty Name="user2" Relationship="Self.FK_User_Img_E" FromRole="image" ToRole="user" />
+          <NavigationProperty Name="Createuser" Relationship="Self.FK_User_Img_C" FromRole="image" ToRole="user" />
+          <NavigationProperty Name="Docuser" Relationship="Self.FK_User_Img_D" FromRole="image" ToRole="user" />
+          <NavigationProperty Name="Expuser" Relationship="Self.FK_User_Img_E" FromRole="image" ToRole="user" />
         </EntityType>
         <EntityType Name="imagestatu">
           <Key>

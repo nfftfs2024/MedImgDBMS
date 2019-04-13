@@ -1,83 +1,108 @@
-﻿@model BootstrapSite3.ViewModels.ImgRepViewModels
+﻿@model MedImgDBMS.ViewModels.ImgRepViewModels
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Expert Image View";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                @Html.DisplayFor(model => model.Images.ImgName)
+                <small></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li>
+                    @Html.ActionLink("Home", "Index", "Images")
+                </li>
+                <li class="active">@Html.DisplayFor(model => model.Images.ImgName)</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <img src=@ViewBag.link class="img-responsive">
+        </div>
+        <div class="col-md-4">
+            <h3>Patient Name</h3>
+            <p>@Html.DisplayFor(model => model.Images.patient.PatFName) @Html.DisplayFor(model => model.Images.patient.PatLName)</p>
+            <dl class="dl-horizontal">
+                <dt>@Html.DisplayName("Image Status:")</dt>
+                <dd class="clearfix">@Html.DisplayFor(model => model.Images.imagestatu.StatusName)</dd>
 
-<div>
-    <h4>image</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ImgPath)
-        </dt>
+                <dt>@Html.DisplayName("Image Creator:")</dt>
+                <dd class="clearfix">@Html.DisplayFor(model => model.Images.Createuser.UserFName) @Html.DisplayFor(model => model.Images.Createuser.UserLName)</dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.ImgPath)
-        </dd>
+                <dt>@Html.DisplayName("Doctor:")</dt>
+                <dd class="clearfix">@Html.DisplayFor(model => model.Images.Docuser.UserFName) @Html.DisplayFor(model => model.Images.Docuser.UserLName)</dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ImgName)
-        </dt>
+                <dt>@Html.DisplayName("Stomatologist:")</dt>
+                <dd class="clearfix">@Html.DisplayFor(model => model.Images.Expuser.UserFName) @Html.DisplayFor(model => model.Images.Expuser.UserLName)</dd>
+            </dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.ImgName)
-        </dd>
+            @if (Model.Reports is null)
+            {
+                using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group shadow-textarea">
+                        <label for="ReportTextarea">Report:</label>
+                        @*<textarea class="form-control z-depth-1" id="exampleFormControlTextarea6" rows="3" placeholder="Write something here..."></textarea>*@
+                        @Html.TextAreaFor(m => m.Reports.RepText, new { @class = "form-control z-depth-1", @placeholder = "Write report here..." })
+                        @Html.ValidationMessageFor(m => m.Reports.RepText, "", new { @class = "text-danger" })
+                    </div>
+                    @*<div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Submit" class="btn btn-default" />
+                        </div>*@
+                    <div class="form-group col-lg-12">
+                        <button class="btn btn-primary" type="submit" id="submit">SUBMIT</button>
+                    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ImgCreateTime)
-        </dt>
+                };
+            }
+            @if (Model.Reports != null)
+            {
+                <div>
+                    <label for="ReportTextarea">Report:</label>
+                    <p>@Html.DisplayFor(model => model.Reports.RepText)</p>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.ImgCreateTime)
-        </dd>
+            }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.patient.PatLName)
-        </dt>
+        </div>
+        <p>
+            @Html.ActionLink("try", "RepTxtSub", new { id = Model.Images.ImgID })
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.patient.PatLName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.imagestatu.StatusName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.imagestatu.StatusName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.user.UserLName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.user.UserLName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.user1.UserLName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.user1.UserLName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.user2.UserLName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.user2.UserLName)
-        </dd>
-
-    </dl>
+    <!--<div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">Related Projects</h3>
+        </div>
+        <div class="col-sm-3 col-xs-6">
+            <a href="#">
+                <img src="http://placehold.it/500x300" class="img-responsive img-customer">
+            </a>
+        </div>
+        <div class="col-sm-3 col-xs-6">
+            <a href="#">
+                <img src="http://placehold.it/500x300" class="img-responsive img-customer">
+            </a>
+        </div>
+        <div class="col-sm-3 col-xs-6">
+            <a href="#">
+                <img src="http://placehold.it/500x300" class="img-responsive img-customer">
+            </a>
+        </div>
+        <div class="col-sm-3 col-xs-6">
+            <a href="#">
+                <img src="http://placehold.it/500x300" class="img-responsive img-customer">
+            </a>
+        </div>
+    </div>-->
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ImgID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

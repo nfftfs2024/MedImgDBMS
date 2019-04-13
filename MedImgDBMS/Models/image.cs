@@ -37,8 +37,8 @@ namespace MedImgDBMS.Models
         public virtual ICollection<report> reports { get; set; }
         public virtual patient patient { get; set; }
         public virtual imagestatu imagestatu { get; set; }
-        public virtual user user { get; set; }
-        public virtual user user1 { get; set; }
-        public virtual user user2 { get; set; }
+        public virtual user Createuser { get; set; }
+        public virtual user Docuser { get; set; }
+        public virtual user Expuser { get; set; }
     }
 }
