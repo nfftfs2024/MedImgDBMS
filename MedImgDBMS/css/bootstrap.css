@@ -6083,3 +6083,9 @@ label,
 .affix {
   position: fixed;
 }
+
+.shadow-textarea textarea.form-control {
+    font-weight: 300;
+    padding-left: 0.8rem;
+    height: 200px;
+}

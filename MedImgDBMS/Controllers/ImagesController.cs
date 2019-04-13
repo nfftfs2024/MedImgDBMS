@@ -67,6 +67,27 @@ namespace MedImgDBMS.Controllers
             return View(view);
         }
 
+        // Post: Expert image view
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ExpImageView(ImgRepViewModels IRVmodel, int ID)
+        {
+            int userID = Convert.ToInt32(Session["UserID"].ToString());     // Get session user id
+
+            report rep = new report();
+            rep.RepText = IRVmodel.Reports.RepText;     // Get report text from returned view model
+            rep.RepCreator = userID;                    // Get report creator user id
+            rep.ImgID = ID;                             // Get image id
+
+            if (ModelState.IsValid)
+            {
+                db.reports.Add(rep);
+                db.SaveChanges();                       // Add report record into db and save
+            }
+
+            return RedirectToAction("ExpImageView", ID);    // Reload page
+        }
+
         // GET: Images/Details/5
         public ActionResult Details(long? id)
         {
