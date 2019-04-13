@@ -19,12 +19,12 @@
         }
         <table align="center">
             <tr>
-                <td>@Html.LabelFor(a => a.AcctLName)</td>
+                <td>@Html.DisplayName("Account Name")</td>
                 <td>@Html.TextBoxFor(a => a.AcctLName)</td>
                 <td>@Html.ValidationMessageFor(a => a.AcctLName)</td>
             </tr>
             <tr>
-                <td>@Html.LabelFor(a => a.AcctPasswd)</td>
+                <td>@Html.DisplayName("Password")</td>
                 <td>@Html.PasswordFor(a => a.AcctPasswd)</td>
                 <td>@Html.ValidationMessageFor(a => a.AcctPasswd)</td>
             </tr>
