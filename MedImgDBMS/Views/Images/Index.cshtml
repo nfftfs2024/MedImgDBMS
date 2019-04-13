@@ -1,0 +1,76 @@
+﻿@model IEnumerable<MedImgDBMS.Models.image>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ImgPath)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImgName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImgCreateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.patient.PatLName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.imagestatu.StatusName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.user.UserLName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.user1.UserLName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.user2.UserLName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImgPath)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImgName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImgCreateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.patient.PatLName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.imagestatu.StatusName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.user.UserLName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.user1.UserLName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.user2.UserLName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ImgID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ImgID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ImgID })
+        </td>
+    </tr>
+}
+
+</table>
