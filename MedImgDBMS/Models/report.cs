@@ -21,6 +21,12 @@ namespace MedImgDBMS.Models
         public long RepCreator { get; set; }
         public long ImgID { get; set; }
     
+        public report()
+        {
+            RepPath = "";
+            RepCreateTime = DateTime.UtcNow;
+        }
+
         public virtual image image { get; set; }
         public virtual user user { get; set; }
     }
