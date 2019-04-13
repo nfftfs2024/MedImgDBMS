@@ -9,14 +9,14 @@
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header">
-                @Html.DisplayFor(model => model.Images.ImgName)
+                @Html.DisplayFor(model => model.Images.ImgName).ToString().ToUpper()
                 <small></small>
             </h1>
             <ol class="breadcrumb">
                 <li>
                     @Html.ActionLink("Home", "Index", "Images")
                 </li>
-                <li class="active">@Html.DisplayFor(model => model.Images.ImgName)</li>
+                <li class="active">@Html.DisplayFor(model => model.Images.ImgName).ToString().ToUpper()</li>
             </ol>
         </div>
     </div>
@@ -75,34 +75,7 @@
 
         </div>
         <p>
-            @Html.ActionLink("try", "RepTxtSub", new { id = Model.Images.ImgID })
             @Html.ActionLink("Back to List", "Index")
         </p>
     </div>
-
-    <!--<div class="row">
-        <div class="col-lg-12">
-            <h3 class="page-header">Related Projects</h3>
-        </div>
-        <div class="col-sm-3 col-xs-6">
-            <a href="#">
-                <img src="http://placehold.it/500x300" class="img-responsive img-customer">
-            </a>
-        </div>
-        <div class="col-sm-3 col-xs-6">
-            <a href="#">
-                <img src="http://placehold.it/500x300" class="img-responsive img-customer">
-            </a>
-        </div>
-        <div class="col-sm-3 col-xs-6">
-            <a href="#">
-                <img src="http://placehold.it/500x300" class="img-responsive img-customer">
-            </a>
-        </div>
-        <div class="col-sm-3 col-xs-6">
-            <a href="#">
-                <img src="http://placehold.it/500x300" class="img-responsive img-customer">
-            </a>
-        </div>
-    </div>-->
 </div>
