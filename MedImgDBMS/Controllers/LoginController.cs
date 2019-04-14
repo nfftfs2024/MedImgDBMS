@@ -20,6 +20,8 @@ namespace MedImgDBMS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(account objUser)
         {
+            string message = string.Empty;      // Create empty string
+
             if (ModelState.IsValid)
             {
                 using (pjmedimgdbEntities db = new pjmedimgdbEntities())
@@ -63,6 +65,12 @@ namespace MedImgDBMS.Controllers
             {
                 return RedirectToAction("Login");
             }
+        }
+
+        public ActionResult Logout()                    // For system logout
+        {
+            Session.Abandon();
+            return RedirectToAction("Login");
         }
     }
 }

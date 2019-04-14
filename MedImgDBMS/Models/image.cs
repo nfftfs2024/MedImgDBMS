@@ -30,6 +30,8 @@ namespace MedImgDBMS.Models
         public Nullable<long> ImgDocID { get; set; }
         public long ImgPatID { get; set; }
         public long StatusID { get; set; }
+        public long RepStatus { get; set; }
+        public long CmtStatus { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<comment> comments { get; set; }

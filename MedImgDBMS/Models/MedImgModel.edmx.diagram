@@ -4,15 +4,15 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ac94d3a0add44bc18aee68d65df723f6" Name="Diagram1">
-        <EntityTypeShape EntityType="pjmedimgdbModel.account" Width="1.5" PointX="5.25" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="pjmedimgdbModel.comment" Width="1.5" PointX="8.25" PointY="5.5" IsExpanded="true" />
+      <Diagram DiagramId="66d9b8d08c9e415cb8a803badfd4b1fe" Name="Diagram1">
+        <EntityTypeShape EntityType="pjmedimgdbModel.account" Width="1.5" PointX="5.25" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.comment" Width="1.5" PointX="8.25" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="pjmedimgdbModel.image" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="pjmedimgdbModel.imagestatu" Width="1.5" PointX="3" PointY="2.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="pjmedimgdbModel.patient" Width="1.5" PointX="3" PointY="9.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="pjmedimgdbModel.report" Width="1.5" PointX="7.5" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="pjmedimgdbModel.role" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
-        <EntityTypeShape EntityType="pjmedimgdbModel.user" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.imagestatu" Width="1.5" PointX="3" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.patient" Width="1.5" PointX="3" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.report" Width="1.5" PointX="7.5" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.role" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.user" Width="1.5" PointX="3" PointY="6.375" IsExpanded="true" />
         <AssociationConnector Association="pjmedimgdbModel.FK_User_Acct" ManuallyRouted="false" />
         <AssociationConnector Association="pjmedimgdbModel.FK_Img_Cmt" ManuallyRouted="false" />
         <AssociationConnector Association="pjmedimgdbModel.FK_User_Cmt" ManuallyRouted="false" />
