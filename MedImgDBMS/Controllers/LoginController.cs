@@ -26,32 +26,45 @@ namespace MedImgDBMS.Controllers
             {
                 using (pjmedimgdbEntities db = new pjmedimgdbEntities())
                 {
-                    var obj = db.accounts.Where(a => a.AcctLName.Equals(objUser.AcctLName) && a.AcctPasswd.Equals(objUser.AcctPasswd)).FirstOrDefault();    // Compare account name and passwd with DB
-                    if (obj != null)
-                    {
-                        Session["UserID"] = obj.AcctID.ToString();          // Get session user id
-                        Session["AcctName"] = obj.AcctLName.ToString();     // Get session account name
-
-                        string role = obj.user.UserRoleID.ToString();       
-                        Session["UserRole"] = role;                         // Get session user role
-
-                        if (role == "1")                                    // Redirect users to different pages
+                    if (objUser.AcctLName != null && objUser.AcctPasswd != null)        // Check if user didn't enter anything
+                    { 
+                        var obj = db.accounts.Where(a => a.AcctLName.Equals(objUser.AcctLName)).FirstOrDefault();    // Check if account name exists in DB
+                        if (obj != null)
                         {
-                            return RedirectToAction("AdminDashBoard");
+                            obj = db.accounts.Where(a => a.AcctLName.Equals(objUser.AcctLName) && a.AcctPasswd.Equals(objUser.AcctPasswd)).FirstOrDefault();    // Compare account name and passwd with DB
+                            if (obj != null)
+                            {
+                                Session["UserID"] = obj.AcctID.ToString();          // Get session user id
+                                Session["AcctName"] = obj.AcctLName.ToString();     // Get session account name
+
+                                string role = obj.user.UserRoleID.ToString();
+                                Session["UserRole"] = role;                         // Get session user role
+
+                                switch (role)                                       // Redirect page according to roles
+                                {
+                                    case "1":
+                                        return RedirectToAction("UserDashBoard");
+                                    case "2":
+                                        return RedirectToAction("Index", "Images");
+                                    case "3":
+                                        return RedirectToAction("Index", "Images");
+                                }
+                            }
+                            else
+                            {
+                                message = "Password is incorrect!!";
+                            }
                         }
                         else
                         {
-                            return RedirectToAction("Index", "Images");
+                            message = "Account does not exist!!";
                         }
-
-                        // Backup for different list pages for doctors and experts
-                        //else if (role == "3")
-                        //{
-                        //    return RedirectToAction("Index", "Images");
-                        //}
                     }
+                    else
+                        message = "Enter your account and password";
                 }
             }
+            ViewBag.Message = message;
             return View(objUser);
         }
 
