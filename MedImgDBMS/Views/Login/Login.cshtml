@@ -13,25 +13,29 @@
         @Html.ValidationSummary(true)
         @if (@ViewBag.Message != null)
         {
-            <div style="border: 1px solid red">
-                @ViewBag.Message
-            </div>
+            <table align="center">
+                <tr>
+                    <td><font color="red">@ViewBag.Message</font></td>
+                </tr>
+            </table>
+            <br />
         }
         <table align="center">
             <tr>
-                <td>@Html.LabelFor(a => a.AcctLName)</td>
+                <td>@Html.DisplayName("Account Name:　")</td>
                 <td>@Html.TextBoxFor(a => a.AcctLName)</td>
                 <td>@Html.ValidationMessageFor(a => a.AcctLName)</td>
             </tr>
             <tr>
-                <td>@Html.LabelFor(a => a.AcctPasswd)</td>
+                <td>@Html.DisplayName("Password:　")</td>
                 <td>@Html.PasswordFor(a => a.AcctPasswd)</td>
                 <td>@Html.ValidationMessageFor(a => a.AcctPasswd)</td>
             </tr>
             <tr>
                 <td></td>
                 <td>
-                    <input type="submit" value="Login" />
+                    <br />
+                    <button class="btn btn-primary" type="submit" value="Login">LOGIN</button>
                 </td>
                 <td></td>
             </tr>

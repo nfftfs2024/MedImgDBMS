@@ -1,0 +1,71 @@
+﻿@model MedImgDBMS.ViewModels.ImgRepViewModels
+
+@{
+    ViewBag.Title = "Doctor Image View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                @Html.DisplayFor(model => model.Image.ImgName).ToString().ToUpper()
+                <small></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li>
+                    @Html.ActionLink("Home", "Index", "Images")
+                </li>
+                <li class="active">@Html.DisplayFor(model => model.Image.ImgName).ToString().ToUpper()</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <img src=@ViewBag.link class="img-responsive">
+        </div>
+        <div class="col-md-4">
+            <h3>Patient Name</h3>
+            <p>@Html.DisplayFor(model => model.Image.patient.PatFName) @Html.DisplayFor(model => model.Image.patient.PatLName)</p>
+            <dl class="dl-horizontal">
+                <dt>@Html.DisplayName("Image Status:")</dt>
+                <dd class="clearfix">@Html.DisplayFor(model => model.Image.imagestatu.StatusName)</dd>
+
+                <dt>@Html.DisplayName("Image Creator:")</dt>
+                <dd class="clearfix">@Html.DisplayFor(model => model.Image.Createuser.UserFName) @Html.DisplayFor(model => model.Image.Createuser.UserLName)</dd>
+
+                <dt>@Html.DisplayName("Doctor:")</dt>
+                <dd class="clearfix">@Html.DisplayFor(model => model.Image.Docuser.UserFName) @Html.DisplayFor(model => model.Image.Docuser.UserLName)</dd>
+
+                <dt>@Html.DisplayName("Stomatologist:")</dt>
+                <dd class="clearfix">@Html.DisplayFor(model => model.Image.Expuser.UserFName) @Html.DisplayFor(model => model.Image.Expuser.UserLName)</dd>
+            </dl>
+
+            @*@if (Model.Report != null)
+            {*@
+                <label>Report:</label>
+                <p>@Html.DisplayFor(model => model.Report.RepText)</p>
+                <br />
+
+                <label>Doctor Comment:</label>
+                <br />
+                @* to do..*@
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group shadow-textarea">
+                        <textarea class="form-control z-depth-1" id="cmtText" name="cmtText" rows="3" placeholder="Write comment here..."></textarea>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <button class="btn btn-primary" type="submit" id="submit">ADD COMMENT</button>
+                    </div>
+                }
+            @*}*@
+        </div>
+        <p>
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    </div>
+</div>

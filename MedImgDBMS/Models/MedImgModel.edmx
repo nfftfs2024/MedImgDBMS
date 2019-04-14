@@ -18,7 +18,6 @@
         <EntityType Name="comment">
           <Key>
             <PropertyRef Name="CmtID" />
-            <PropertyRef Name="CmtSeq" />
           </Key>
           <Property Name="CmtID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CmtSeq" Type="uint" Nullable="false" />
@@ -40,6 +39,8 @@
           <Property Name="ImgDocID" Type="uint" />
           <Property Name="ImgPatID" Type="uint" Nullable="false" />
           <Property Name="StatusID" Type="uint" Nullable="false" />
+          <Property Name="RepStatus" Type="uint" Nullable="false" />
+          <Property Name="CmtStatus" Type="uint" Nullable="false" />
         </EntityType>
         <EntityType Name="imagestatus">
           <Key>
@@ -294,7 +295,6 @@
         <EntityType Name="comment">
           <Key>
             <PropertyRef Name="CmtID" />
-            <PropertyRef Name="CmtSeq" />
           </Key>
           <Property Name="CmtID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CmtSeq" Type="Int64" Nullable="false" />
@@ -318,13 +318,15 @@
           <Property Name="ImgDocID" Type="Int64" />
           <Property Name="ImgPatID" Type="Int64" Nullable="false" />
           <Property Name="StatusID" Type="Int64" Nullable="false" />
+          <Property Name="RepStatus" Type="Int64" Nullable="false" />
+          <Property Name="CmtStatus" Type="Int64" Nullable="false" />
           <NavigationProperty Name="comments" Relationship="Self.FK_Img_Cmt" FromRole="image" ToRole="comment" />
           <NavigationProperty Name="reports" Relationship="Self.FK_Img_Rep" FromRole="image" ToRole="report" />
           <NavigationProperty Name="patient" Relationship="Self.FK_Pat_Img" FromRole="image" ToRole="patient" />
           <NavigationProperty Name="imagestatu" Relationship="Self.FK_Stat_Img" FromRole="image" ToRole="imagestatus" />
-          <NavigationProperty Name="user" Relationship="Self.FK_User_Img_C" FromRole="image" ToRole="user" />
-          <NavigationProperty Name="user1" Relationship="Self.FK_User_Img_D" FromRole="image" ToRole="user" />
-          <NavigationProperty Name="user2" Relationship="Self.FK_User_Img_E" FromRole="image" ToRole="user" />
+          <NavigationProperty Name="Createuser" Relationship="Self.FK_User_Img_C" FromRole="image" ToRole="user" />
+          <NavigationProperty Name="Docuser" Relationship="Self.FK_User_Img_D" FromRole="image" ToRole="user" />
+          <NavigationProperty Name="Expuser" Relationship="Self.FK_User_Img_E" FromRole="image" ToRole="user" />
         </EntityType>
         <EntityType Name="imagestatu">
           <Key>
@@ -613,6 +615,8 @@
                 <ScalarProperty Name="ImgDocID" ColumnName="ImgDocID" />
                 <ScalarProperty Name="ImgPatID" ColumnName="ImgPatID" />
                 <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="RepStatus" ColumnName="RepStatus" />
+                <ScalarProperty Name="CmtStatus" ColumnName="CmtStatus" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
