@@ -8,7 +8,7 @@ namespace MedImgDBMS.ViewModels
 {
     public class ImgRepViewModels
     {
-        public image Images { get; set; }
-        public report Reports { get; set; }
+        public image Image { get; set; }
+        public report Report { get; set; }
     }
 }

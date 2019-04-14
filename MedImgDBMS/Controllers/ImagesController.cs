@@ -35,34 +35,47 @@ namespace MedImgDBMS.Controllers
         // Doctor image view page
         public ActionResult DocImageView(long? id)
         {
-            image image = db.images.Find(id);
-            if (image == null)
-            {
-                return HttpNotFound();
-            }
+            image img = db.images.Find(id);               // Find images belong to user id in DB
+            report rep = (from r in db.reports
+                          where r.ImgID == id
+                          select r).FirstOrDefault();       // Find reports belong to his image
 
-            string server = db.Database.Connection.DataSource.ToString();
-            string img_link = "http://" + server + "/" + image.ImgPath;
-            ViewBag.link = img_link;
-            return View(image);
+            var view = new ImgRepViewModels()               // Initialise a view model for passing into view
+            {
+                Image = img,
+                Report = rep
+            };
+
+            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
+            string img_link = "http://" + server + "/" + img.ImgPath;   // Concatenate image URL
+            ViewBag.link = img_link;                                      // Create viewbag variable for image URL
+            return View(view);
+        }
+
+        // Post: Doctor image view
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DocImageView(int id)
+        {
+            return RedirectToAction("DocImageView", id);    // Reload page
         }
 
         // Expert image view page
         public ActionResult ExpImageView(long? id)
         {
-            image imgs = db.images.Find(id);                // Find images belong to user id in db
-            report reps = (from rep in db.reports
-                           where rep.ImgID == id
-                           select rep).FirstOrDefault();    // Find reports belong to this image
+            image img = db.images.Find(id);                // Find images belong to user id in DB
+            report rep = (from r in db.reports
+                           where r.ImgID == id
+                           select r).FirstOrDefault();    // Find reports belong to this image
 
             var view = new ImgRepViewModels()               // Initialise a view model for passing into view
             {
-                Images = imgs,
-                Reports = reps
+                Image = img,
+                Report = rep
             };
 
             string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
-            string img_link = "http://" + server + "/" + imgs.ImgPath;    // Concatenate image URL
+            string img_link = "http://" + server + "/" + img.ImgPath;    // Concatenate image URL
             ViewBag.link = img_link;                                      // Create viewbag variable for image URL
             return View(view);
         }
@@ -70,14 +83,14 @@ namespace MedImgDBMS.Controllers
         // Post: Expert image view
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ExpImageView(ImgRepViewModels IRVmodel, int ID)
+        public ActionResult ExpImageView(ImgRepViewModels IRVmodel, int id)
         {
             int userID = Convert.ToInt32(Session["UserID"].ToString());     // Get session user id
 
             report rep = new report();
-            rep.RepText = IRVmodel.Reports.RepText;     // Get report text from returned view model
+            rep.RepText = IRVmodel.Report.RepText;     // Get report text from returned view model
             rep.RepCreator = userID;                    // Get report creator user id
-            rep.ImgID = ID;                             // Get image id
+            rep.ImgID = id;                             // Get image id
 
             if (ModelState.IsValid)
             {
@@ -85,7 +98,7 @@ namespace MedImgDBMS.Controllers
                 db.SaveChanges();                       // Add report record into db and save
             }
 
-            return RedirectToAction("ExpImageView", ID);    // Reload page
+            return RedirectToAction("ExpImageView", id);    // Reload page
         }
 
         // GET: Images/Details/5
