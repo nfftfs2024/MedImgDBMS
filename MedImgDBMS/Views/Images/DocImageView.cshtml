@@ -1,7 +1,7 @@
 ﻿@model MedImgDBMS.ViewModels.ImgRepViewModels
 
 @{
-    ViewBag.Title = "Expert Image View";
+    ViewBag.Title = "Doctor Image View";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -41,31 +41,28 @@
                 <dd class="clearfix">@Html.DisplayFor(model => model.Image.Expuser.UserFName) @Html.DisplayFor(model => model.Image.Expuser.UserLName)</dd>
             </dl>
 
-            @if (Model.Report is null)
-            {
-                using (Html.BeginForm())
+            @*@if (Model.Report != null)
+            {*@
+                <label>Report:</label>
+                <p>@Html.DisplayFor(model => model.Report.RepText)</p>
+                <br />
+
+                <label>Doctor Comment:</label>
+                <br />
+                @* to do..*@
+
+                @using (Html.BeginForm())
                 {
                     @Html.AntiForgeryToken()
-                    <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group shadow-textarea">
-                        <label for="ReportTextarea">Report:</label>
-                        @Html.TextAreaFor(m => m.Report.RepText, new { @class = "form-control z-depth-1", @placeholder = "Write report here..." })
-                        @Html.ValidationMessageFor(m => m.Report.RepText, "", new { @class = "text-danger" })
+                        <textarea class="form-control z-depth-1" id="cmtText" name="cmtText" rows="3" placeholder="Write comment here..."></textarea>
                     </div>
                     <div class="form-group col-lg-12">
-                        <button class="btn btn-primary" type="submit" id="submit">SUBMIT</button>
+                        <button class="btn btn-primary" type="submit" id="submit">ADD COMMENT</button>
                     </div>
-                };
-            }
-            @if (Model.Report != null)
-            {
-                <div>
-                    <label for="ReportTextarea">Report:</label>
-                    <p>@Html.DisplayFor(model => model.Report.RepText)</p>
-                </div>
-
-            }
+                }
+            @*}*@
         </div>
         <p>
             @Html.ActionLink("Back to List", "Index")
