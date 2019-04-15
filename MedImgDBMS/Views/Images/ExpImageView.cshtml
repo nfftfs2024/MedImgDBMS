@@ -40,13 +40,12 @@
                 <dt>@Html.DisplayName("Stomatologist:")</dt>
                 <dd class="clearfix">@Html.DisplayFor(model => model.Image.Expuser.UserFName) @Html.DisplayFor(model => model.Image.Expuser.UserLName)</dd>
             </dl>
-
+            <hr />
             @if (Model.Report is null)
             {
                 using (Html.BeginForm())
                 {
                     @Html.AntiForgeryToken()
-                    <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group shadow-textarea">
                         <label for="ReportTextarea">Report:</label>

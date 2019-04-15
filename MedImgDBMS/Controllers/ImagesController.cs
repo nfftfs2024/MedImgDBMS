@@ -23,6 +23,9 @@ namespace MedImgDBMS.Controllers
                          where (img.ImgDocID == userID || img.ImgExpID == userID)
                          select img;                                                                        // LINQ to select only user viewable images
 
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();
             if (images == null)                 // Condition for viewing empty image list
                 return View();
             else                                // Condition for viewing image list
