@@ -25,7 +25,8 @@ namespace MedImgDBMS.Controllers
 
             ViewBag.userName = (from usr in db.users
                                 where (usr.UserID == userID)
-                                select usr.UserFName).FirstOrDefault().ToString();
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
+
             if (images == null)                 // Condition for viewing empty image list
                 return View();
             else                                // Condition for viewing image list
