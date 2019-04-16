@@ -44,7 +44,7 @@ namespace MedImgDBMS.Controllers
                           where r.ImgID == id
                           select r).FirstOrDefault();       // Find reports belong to his image
 
-            var view = new ImgRepViewModels()               // Initialise a view model for passing into view
+            var view = new ImgRepCmtViewModels()               // Initialise a view model for passing into view
             {
                 Image = img,
                 Report = rep
@@ -72,7 +72,7 @@ namespace MedImgDBMS.Controllers
                            where r.ImgID == id
                            select r).FirstOrDefault();    // Find reports belong to this image
 
-            var view = new ImgRepViewModels()               // Initialise a view model for passing into view
+            var view = new ImgRepCmtViewModels()               // Initialise a view model for passing into view
             {
                 Image = img,
                 Report = rep
@@ -87,7 +87,7 @@ namespace MedImgDBMS.Controllers
         // Post: Expert image view
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ExpImageView(ImgRepViewModels IRVmodel, int id)
+        public ActionResult ExpImageView(ImgRepCmtViewModels IRVmodel, int id)
         {
             int userID = Convert.ToInt32(Session["UserID"].ToString());     // Get session user id
 

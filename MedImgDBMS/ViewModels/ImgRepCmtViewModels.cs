@@ -6,9 +6,10 @@ using MedImgDBMS.Models;
 
 namespace MedImgDBMS.ViewModels
 {
-    public class ImgRepViewModels
+    public class ImgRepCmtViewModels
     {
         public image Image { get; set; }
         public report Report { get; set; }
+        public List<comment> Comments { get; set; }
     }
 }

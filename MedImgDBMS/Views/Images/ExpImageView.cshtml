@@ -1,4 +1,4 @@
-﻿@model MedImgDBMS.ViewModels.ImgRepViewModels
+﻿@model MedImgDBMS.ViewModels.ImgRepCmtViewModels
 
 @{
     ViewBag.Title = "Expert Image View";
@@ -41,7 +41,7 @@
                 <dd class="clearfix">@Html.DisplayFor(model => model.Image.Expuser.UserFName) @Html.DisplayFor(model => model.Image.Expuser.UserLName)</dd>
             </dl>
             <hr />
-            @if (Model.Report is null)
+            @if (Model.Image.ImgStatus)
             {
                 using (Html.BeginForm())
                 {
