@@ -218,6 +218,9 @@
     <Compile Include="Models\account.cs">
       <DependentUpon>MedImgModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\accountstatu.cs">
+      <DependentUpon>MedImgModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\comment.cs">
       <DependentUpon>MedImgModel.tt</DependentUpon>
     </Compile>
@@ -247,6 +250,9 @@
       <DependentUpon>MedImgModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\report.cs">
+      <DependentUpon>MedImgModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\reportstatu.cs">
       <DependentUpon>MedImgModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\role.cs">

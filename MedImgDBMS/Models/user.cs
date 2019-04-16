@@ -27,6 +27,7 @@ namespace MedImgDBMS.Models
         public long UserID { get; set; }
         public string UserLName { get; set; }
         public string UserFName { get; set; }
+        public string Email { get; set; }
         public long UserRoleID { get; set; }
     
         public virtual account account { get; set; }

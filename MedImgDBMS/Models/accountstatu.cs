@@ -12,18 +12,18 @@ namespace MedImgDBMS.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class imagestatu
+    public partial class accountstatu
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public imagestatu()
+        public accountstatu()
         {
-            this.images = new HashSet<image>();
+            this.accounts = new HashSet<account>();
         }
     
-        public long ImgStatID { get; set; }
-        public string ImgStatusName { get; set; }
+        public long AcctStatID { get; set; }
+        public string AcctStatusName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<image> images { get; set; }
+        public virtual ICollection<account> accounts { get; set; }
     }
 }

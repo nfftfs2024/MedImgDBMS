@@ -12,8 +12,15 @@
           <Property Name="AcctID" Type="uint" Nullable="false" />
           <Property Name="AcctLName" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="AcctPasswd" Type="varchar" MaxLength="15" Nullable="false" />
-          <Property Name="AcctStatus" Type="enum" Nullable="false" />
+          <Property Name="AcctStatus" Type="uint" Nullable="false" />
           <Property Name="AcctCreateTime" Type="timestamp" Precision="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="accountstatus">
+          <Key>
+            <PropertyRef Name="AcctStatID" />
+          </Key>
+          <Property Name="AcctStatID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AcctStatusName" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="comment">
           <Key>
@@ -38,16 +45,15 @@
           <Property Name="ImgExpID" Type="uint" />
           <Property Name="ImgDocID" Type="uint" />
           <Property Name="ImgPatID" Type="uint" Nullable="false" />
-          <Property Name="StatusID" Type="uint" Nullable="false" />
+          <Property Name="ImgStatus" Type="uint" Nullable="false" />
           <Property Name="RepStatus" Type="uint" Nullable="false" />
-          <Property Name="CmtStatus" Type="uint" Nullable="false" />
         </EntityType>
         <EntityType Name="imagestatus">
           <Key>
             <PropertyRef Name="ImgStatID" />
           </Key>
           <Property Name="ImgStatID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="StatusName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ImgStatusName" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="patient">
           <Key>
@@ -70,6 +76,13 @@
           <Property Name="RepCreator" Type="uint" Nullable="false" />
           <Property Name="ImgID" Type="uint" Nullable="false" />
         </EntityType>
+        <EntityType Name="reportstatus">
+          <Key>
+            <PropertyRef Name="RepStatID" />
+          </Key>
+          <Property Name="RepStatID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RepStatusName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
         <EntityType Name="role">
           <Key>
             <PropertyRef Name="RoleID" />
@@ -84,8 +97,21 @@
           <Property Name="UserID" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserLName" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="UserFName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="30" />
           <Property Name="UserRoleID" Type="uint" Nullable="false" />
         </EntityType>
+        <Association Name="FK_AcctStat_Acct">
+          <End Role="accountstatus" Type="Self.accountstatus" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="accountstatus">
+              <PropertyRef Name="AcctStatID" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="AcctStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Img_Cmt">
           <End Role="image" Type="Self.image" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -114,6 +140,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ImgStat_Img">
+          <End Role="imagestatus" Type="Self.imagestatus" Multiplicity="1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="imagestatus">
+              <PropertyRef Name="ImgStatID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="ImgStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Pat_Img">
           <End Role="patient" Type="Self.patient" Multiplicity="1" />
           <End Role="image" Type="Self.image" Multiplicity="*" />
@@ -126,6 +164,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_RepStat_Img">
+          <End Role="reportstatus" Type="Self.reportstatus" Multiplicity="1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="reportstatus">
+              <PropertyRef Name="RepStatID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="RepStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Role_User">
           <End Role="role" Type="Self.role" Multiplicity="1" />
           <End Role="user" Type="Self.user" Multiplicity="*" />
@@ -135,18 +185,6 @@
             </Principal>
             <Dependent Role="user">
               <PropertyRef Name="UserRoleID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Stat_Img">
-          <End Role="imagestatus" Type="Self.imagestatus" Multiplicity="1" />
-          <End Role="image" Type="Self.image" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="imagestatus">
-              <PropertyRef Name="ImgStatID" />
-            </Principal>
-            <Dependent Role="image">
-              <PropertyRef Name="StatusID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -224,13 +262,19 @@
         </Association>
         <EntityContainer Name="pjmedimgdbModelStoreContainer">
           <EntitySet Name="account" EntityType="Self.account" Schema="pjmedimgdb" store:Type="Tables" />
+          <EntitySet Name="accountstatus" EntityType="Self.accountstatus" Schema="pjmedimgdb" store:Type="Tables" />
           <EntitySet Name="comment" EntityType="Self.comment" Schema="pjmedimgdb" store:Type="Tables" />
           <EntitySet Name="image" EntityType="Self.image" Schema="pjmedimgdb" store:Type="Tables" />
           <EntitySet Name="imagestatus" EntityType="Self.imagestatus" Schema="pjmedimgdb" store:Type="Tables" />
           <EntitySet Name="patient" EntityType="Self.patient" Schema="pjmedimgdb" store:Type="Tables" />
           <EntitySet Name="report" EntityType="Self.report" Schema="pjmedimgdb" store:Type="Tables" />
+          <EntitySet Name="reportstatus" EntityType="Self.reportstatus" Schema="pjmedimgdb" store:Type="Tables" />
           <EntitySet Name="role" EntityType="Self.role" Schema="pjmedimgdb" store:Type="Tables" />
           <EntitySet Name="user" EntityType="Self.user" Schema="pjmedimgdb" store:Type="Tables" />
+          <AssociationSet Name="FK_AcctStat_Acct" Association="Self.FK_AcctStat_Acct">
+            <End Role="accountstatus" EntitySet="accountstatus" />
+            <End Role="account" EntitySet="account" />
+          </AssociationSet>
           <AssociationSet Name="FK_Img_Cmt" Association="Self.FK_Img_Cmt">
             <End Role="image" EntitySet="image" />
             <End Role="comment" EntitySet="comment" />
@@ -239,17 +283,21 @@
             <End Role="image" EntitySet="image" />
             <End Role="report" EntitySet="report" />
           </AssociationSet>
+          <AssociationSet Name="FK_ImgStat_Img" Association="Self.FK_ImgStat_Img">
+            <End Role="imagestatus" EntitySet="imagestatus" />
+            <End Role="image" EntitySet="image" />
+          </AssociationSet>
           <AssociationSet Name="FK_Pat_Img" Association="Self.FK_Pat_Img">
             <End Role="patient" EntitySet="patient" />
+            <End Role="image" EntitySet="image" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepStat_Img" Association="Self.FK_RepStat_Img">
+            <End Role="reportstatus" EntitySet="reportstatus" />
             <End Role="image" EntitySet="image" />
           </AssociationSet>
           <AssociationSet Name="FK_Role_User" Association="Self.FK_Role_User">
             <End Role="role" EntitySet="role" />
             <End Role="user" EntitySet="user" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Stat_Img" Association="Self.FK_Stat_Img">
-            <End Role="imagestatus" EntitySet="imagestatus" />
-            <End Role="image" EntitySet="image" />
           </AssociationSet>
           <AssociationSet Name="FK_User_Acct" Association="Self.FK_User_Acct">
             <End Role="user" EntitySet="user" />
@@ -288,9 +336,18 @@
           <Property Name="AcctID" Type="Int64" Nullable="false" />
           <Property Name="AcctLName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="AcctPasswd" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="AcctStatus" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AcctStatus" Type="Int64" Nullable="false" />
           <Property Name="AcctCreateTime" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="accountstatu" Relationship="Self.FK_AcctStat_Acct" FromRole="account" ToRole="accountstatus" />
           <NavigationProperty Name="user" Relationship="Self.FK_User_Acct" FromRole="account" ToRole="user" />
+        </EntityType>
+        <EntityType Name="accountstatu">
+          <Key>
+            <PropertyRef Name="AcctStatID" />
+          </Key>
+          <Property Name="AcctStatID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AcctStatusName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="accounts" Relationship="Self.FK_AcctStat_Acct" FromRole="accountstatus" ToRole="account" />
         </EntityType>
         <EntityType Name="comment">
           <Key>
@@ -317,13 +374,13 @@
           <Property Name="ImgExpID" Type="Int64" />
           <Property Name="ImgDocID" Type="Int64" />
           <Property Name="ImgPatID" Type="Int64" Nullable="false" />
-          <Property Name="StatusID" Type="Int64" Nullable="false" />
+          <Property Name="ImgStatus" Type="Int64" Nullable="false" />
           <Property Name="RepStatus" Type="Int64" Nullable="false" />
-          <Property Name="CmtStatus" Type="Int64" Nullable="false" />
           <NavigationProperty Name="comments" Relationship="Self.FK_Img_Cmt" FromRole="image" ToRole="comment" />
           <NavigationProperty Name="reports" Relationship="Self.FK_Img_Rep" FromRole="image" ToRole="report" />
+          <NavigationProperty Name="imagestatu" Relationship="Self.FK_ImgStat_Img" FromRole="image" ToRole="imagestatus" />
           <NavigationProperty Name="patient" Relationship="Self.FK_Pat_Img" FromRole="image" ToRole="patient" />
-          <NavigationProperty Name="imagestatu" Relationship="Self.FK_Stat_Img" FromRole="image" ToRole="imagestatus" />
+          <NavigationProperty Name="reportstatu" Relationship="Self.FK_RepStat_Img" FromRole="image" ToRole="reportstatus" />
           <NavigationProperty Name="Createuser" Relationship="Self.FK_User_Img_C" FromRole="image" ToRole="user" />
           <NavigationProperty Name="Docuser" Relationship="Self.FK_User_Img_D" FromRole="image" ToRole="user" />
           <NavigationProperty Name="Expuser" Relationship="Self.FK_User_Img_E" FromRole="image" ToRole="user" />
@@ -333,8 +390,8 @@
             <PropertyRef Name="ImgStatID" />
           </Key>
           <Property Name="ImgStatID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StatusName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="images" Relationship="Self.FK_Stat_Img" FromRole="imagestatus" ToRole="image" />
+          <Property Name="ImgStatusName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="images" Relationship="Self.FK_ImgStat_Img" FromRole="imagestatus" ToRole="image" />
         </EntityType>
         <EntityType Name="patient">
           <Key>
@@ -360,6 +417,14 @@
           <NavigationProperty Name="image" Relationship="Self.FK_Img_Rep" FromRole="report" ToRole="image" />
           <NavigationProperty Name="user" Relationship="Self.FK_User_Rep" FromRole="report" ToRole="user" />
         </EntityType>
+        <EntityType Name="reportstatu">
+          <Key>
+            <PropertyRef Name="RepStatID" />
+          </Key>
+          <Property Name="RepStatID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RepStatusName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="images" Relationship="Self.FK_RepStat_Img" FromRole="reportstatus" ToRole="image" />
+        </EntityType>
         <EntityType Name="role">
           <Key>
             <PropertyRef Name="RoleID" />
@@ -375,6 +440,7 @@
           <Property Name="UserID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserLName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserFName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="UserRoleID" Type="Int64" Nullable="false" />
           <NavigationProperty Name="account" Relationship="Self.FK_User_Acct" FromRole="user" ToRole="account" />
           <NavigationProperty Name="comments" Relationship="Self.FK_User_Cmt" FromRole="user" ToRole="comment" />
@@ -384,6 +450,18 @@
           <NavigationProperty Name="reports" Relationship="Self.FK_User_Rep" FromRole="user" ToRole="report" />
           <NavigationProperty Name="role" Relationship="Self.FK_Role_User" FromRole="user" ToRole="role" />
         </EntityType>
+        <Association Name="FK_AcctStat_Acct">
+          <End Role="accountstatus" Type="Self.accountstatu" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="accountstatus">
+              <PropertyRef Name="AcctStatID" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="AcctStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_User_Acct">
           <End Role="user" Type="Self.user" Multiplicity="1" />
           <End Role="account" Type="Self.account" Multiplicity="0..1" />
@@ -436,6 +514,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ImgStat_Img">
+          <End Role="imagestatus" Type="Self.imagestatu" Multiplicity="1" />
+          <End Role="image" Type="Self.image" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="imagestatus">
+              <PropertyRef Name="ImgStatID" />
+            </Principal>
+            <Dependent Role="image">
+              <PropertyRef Name="ImgStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Pat_Img">
           <End Role="patient" Type="Self.patient" Multiplicity="1" />
           <End Role="image" Type="Self.image" Multiplicity="*" />
@@ -448,15 +538,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Stat_Img">
-          <End Role="imagestatus" Type="Self.imagestatu" Multiplicity="1" />
+        <Association Name="FK_RepStat_Img">
+          <End Role="reportstatus" Type="Self.reportstatu" Multiplicity="1" />
           <End Role="image" Type="Self.image" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="imagestatus">
-              <PropertyRef Name="ImgStatID" />
+            <Principal Role="reportstatus">
+              <PropertyRef Name="RepStatID" />
             </Principal>
             <Dependent Role="image">
-              <PropertyRef Name="StatusID" />
+              <PropertyRef Name="RepStatus" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -522,13 +612,19 @@
         </Association>
         <EntityContainer Name="pjmedimgdbEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="accounts" EntityType="Self.account" />
+          <EntitySet Name="accountstatus" EntityType="Self.accountstatu" />
           <EntitySet Name="comments" EntityType="Self.comment" />
           <EntitySet Name="images" EntityType="Self.image" />
           <EntitySet Name="imagestatus" EntityType="Self.imagestatu" />
           <EntitySet Name="patients" EntityType="Self.patient" />
           <EntitySet Name="reports" EntityType="Self.report" />
+          <EntitySet Name="reportstatus" EntityType="Self.reportstatu" />
           <EntitySet Name="roles" EntityType="Self.role" />
           <EntitySet Name="users" EntityType="Self.user" />
+          <AssociationSet Name="FK_AcctStat_Acct" Association="Self.FK_AcctStat_Acct">
+            <End Role="accountstatus" EntitySet="accountstatus" />
+            <End Role="account" EntitySet="accounts" />
+          </AssociationSet>
           <AssociationSet Name="FK_User_Acct" Association="Self.FK_User_Acct">
             <End Role="user" EntitySet="users" />
             <End Role="account" EntitySet="accounts" />
@@ -545,12 +641,16 @@
             <End Role="image" EntitySet="images" />
             <End Role="report" EntitySet="reports" />
           </AssociationSet>
+          <AssociationSet Name="FK_ImgStat_Img" Association="Self.FK_ImgStat_Img">
+            <End Role="imagestatus" EntitySet="imagestatus" />
+            <End Role="image" EntitySet="images" />
+          </AssociationSet>
           <AssociationSet Name="FK_Pat_Img" Association="Self.FK_Pat_Img">
             <End Role="patient" EntitySet="patients" />
             <End Role="image" EntitySet="images" />
           </AssociationSet>
-          <AssociationSet Name="FK_Stat_Img" Association="Self.FK_Stat_Img">
-            <End Role="imagestatus" EntitySet="imagestatus" />
+          <AssociationSet Name="FK_RepStat_Img" Association="Self.FK_RepStat_Img">
+            <End Role="reportstatus" EntitySet="reportstatus" />
             <End Role="image" EntitySet="images" />
           </AssociationSet>
           <AssociationSet Name="FK_User_Img_C" Association="Self.FK_User_Img_C">
@@ -591,6 +691,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="accountstatus">
+            <EntityTypeMapping TypeName="pjmedimgdbModel.accountstatu">
+              <MappingFragment StoreEntitySet="accountstatus">
+                <ScalarProperty Name="AcctStatID" ColumnName="AcctStatID" />
+                <ScalarProperty Name="AcctStatusName" ColumnName="AcctStatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="comments">
             <EntityTypeMapping TypeName="pjmedimgdbModel.comment">
               <MappingFragment StoreEntitySet="comment">
@@ -614,9 +722,8 @@
                 <ScalarProperty Name="ImgExpID" ColumnName="ImgExpID" />
                 <ScalarProperty Name="ImgDocID" ColumnName="ImgDocID" />
                 <ScalarProperty Name="ImgPatID" ColumnName="ImgPatID" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="ImgStatus" ColumnName="ImgStatus" />
                 <ScalarProperty Name="RepStatus" ColumnName="RepStatus" />
-                <ScalarProperty Name="CmtStatus" ColumnName="CmtStatus" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -624,7 +731,7 @@
             <EntityTypeMapping TypeName="pjmedimgdbModel.imagestatu">
               <MappingFragment StoreEntitySet="imagestatus">
                 <ScalarProperty Name="ImgStatID" ColumnName="ImgStatID" />
-                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+                <ScalarProperty Name="ImgStatusName" ColumnName="ImgStatusName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -651,6 +758,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="reportstatus">
+            <EntityTypeMapping TypeName="pjmedimgdbModel.reportstatu">
+              <MappingFragment StoreEntitySet="reportstatus">
+                <ScalarProperty Name="RepStatID" ColumnName="RepStatID" />
+                <ScalarProperty Name="RepStatusName" ColumnName="RepStatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="roles">
             <EntityTypeMapping TypeName="pjmedimgdbModel.role">
               <MappingFragment StoreEntitySet="role">
@@ -665,6 +780,7 @@
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="UserLName" ColumnName="UserLName" />
                 <ScalarProperty Name="UserFName" ColumnName="UserFName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="UserRoleID" ColumnName="UserRoleID" />
               </MappingFragment>
             </EntityTypeMapping>

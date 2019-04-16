@@ -17,9 +17,10 @@ namespace MedImgDBMS.Models
         public long AcctID { get; set; }
         public string AcctLName { get; set; }
         public string AcctPasswd { get; set; }
-        public string AcctStatus { get; set; }
+        public long AcctStatus { get; set; }
         public System.DateTime AcctCreateTime { get; set; }
     
+        public virtual accountstatu accountstatu { get; set; }
         public virtual user user { get; set; }
     }
 }

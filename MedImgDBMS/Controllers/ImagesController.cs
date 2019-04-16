@@ -146,7 +146,7 @@ namespace MedImgDBMS.Controllers
             }
 
             ViewBag.ImgPatID = new SelectList(db.patients, "PatID", "PatLName", image.ImgPatID);
-            ViewBag.StatusID = new SelectList(db.imagestatus, "ImgStatID", "StatusName", image.StatusID);
+            ViewBag.StatusID = new SelectList(db.imagestatus, "ImgStatID", "StatusName", image.ImgStatus);
             ViewBag.ImgCreator = new SelectList(db.users, "UserID", "UserLName", image.ImgCreator);
             ViewBag.ImgDocID = new SelectList(db.users, "UserID", "UserLName", image.ImgDocID);
             ViewBag.ImgExpID = new SelectList(db.users, "UserID", "UserLName", image.ImgExpID);
@@ -166,7 +166,7 @@ namespace MedImgDBMS.Controllers
                 return HttpNotFound();
             }
             ViewBag.ImgPatID = new SelectList(db.patients, "PatID", "PatLName", image.ImgPatID);
-            ViewBag.StatusID = new SelectList(db.imagestatus, "ImgStatID", "StatusName", image.StatusID);
+            ViewBag.StatusID = new SelectList(db.imagestatus, "ImgStatID", "StatusName", image.ImgStatus);
             ViewBag.ImgCreator = new SelectList(db.users, "UserID", "UserLName", image.ImgCreator);
             ViewBag.ImgDocID = new SelectList(db.users, "UserID", "UserLName", image.ImgDocID);
             ViewBag.ImgExpID = new SelectList(db.users, "UserID", "UserLName", image.ImgExpID);
@@ -187,7 +187,7 @@ namespace MedImgDBMS.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.ImgPatID = new SelectList(db.patients, "PatID", "PatLName", image.ImgPatID);
-            ViewBag.StatusID = new SelectList(db.imagestatus, "ImgStatID", "StatusName", image.StatusID);
+            ViewBag.StatusID = new SelectList(db.imagestatus, "ImgStatID", "StatusName", image.ImgStatus);
             ViewBag.ImgCreator = new SelectList(db.users, "UserID", "UserLName", image.ImgCreator);
             ViewBag.ImgDocID = new SelectList(db.users, "UserID", "UserLName", image.ImgDocID);
             ViewBag.ImgExpID = new SelectList(db.users, "UserID", "UserLName", image.ImgExpID);

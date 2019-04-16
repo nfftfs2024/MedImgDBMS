@@ -26,11 +26,13 @@ namespace MedImgDBMS.Models
         }
     
         public virtual DbSet<account> accounts { get; set; }
+        public virtual DbSet<accountstatu> accountstatus { get; set; }
         public virtual DbSet<comment> comments { get; set; }
         public virtual DbSet<image> images { get; set; }
         public virtual DbSet<imagestatu> imagestatus { get; set; }
         public virtual DbSet<patient> patients { get; set; }
         public virtual DbSet<report> reports { get; set; }
+        public virtual DbSet<reportstatu> reportstatus { get; set; }
         public virtual DbSet<role> roles { get; set; }
         public virtual DbSet<user> users { get; set; }
     }

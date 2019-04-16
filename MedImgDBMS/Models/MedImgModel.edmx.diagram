@@ -4,21 +4,25 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="66d9b8d08c9e415cb8a803badfd4b1fe" Name="Diagram1">
-        <EntityTypeShape EntityType="pjmedimgdbModel.account" Width="1.5" PointX="5.25" PointY="6.875" IsExpanded="true" />
+      <Diagram DiagramId="b7fa00a34c544b9993d26ee1753b5f54" Name="Diagram1">
+        <EntityTypeShape EntityType="pjmedimgdbModel.account" Width="1.5" PointX="5.25" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.accountstatu" Width="1.5" PointX="3" PointY="16.25" IsExpanded="true" />
         <EntityTypeShape EntityType="pjmedimgdbModel.comment" Width="1.5" PointX="8.25" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="pjmedimgdbModel.image" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="pjmedimgdbModel.imagestatu" Width="1.5" PointX="3" PointY="3.375" IsExpanded="true" />
         <EntityTypeShape EntityType="pjmedimgdbModel.patient" Width="1.5" PointX="3" PointY="10.625" IsExpanded="true" />
         <EntityTypeShape EntityType="pjmedimgdbModel.report" Width="1.5" PointX="7.5" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="pjmedimgdbModel.reportstatu" Width="1.5" PointX="3" PointY="13.625" IsExpanded="true" />
         <EntityTypeShape EntityType="pjmedimgdbModel.role" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
         <EntityTypeShape EntityType="pjmedimgdbModel.user" Width="1.5" PointX="3" PointY="6.375" IsExpanded="true" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_AcctStat_Acct" ManuallyRouted="false" />
         <AssociationConnector Association="pjmedimgdbModel.FK_User_Acct" ManuallyRouted="false" />
         <AssociationConnector Association="pjmedimgdbModel.FK_Img_Cmt" ManuallyRouted="false" />
         <AssociationConnector Association="pjmedimgdbModel.FK_User_Cmt" ManuallyRouted="false" />
         <AssociationConnector Association="pjmedimgdbModel.FK_Img_Rep" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_ImgStat_Img" ManuallyRouted="false" />
         <AssociationConnector Association="pjmedimgdbModel.FK_Pat_Img" ManuallyRouted="false" />
-        <AssociationConnector Association="pjmedimgdbModel.FK_Stat_Img" ManuallyRouted="false" />
+        <AssociationConnector Association="pjmedimgdbModel.FK_RepStat_Img" ManuallyRouted="false" />
         <AssociationConnector Association="pjmedimgdbModel.FK_User_Img_C" ManuallyRouted="false" />
         <AssociationConnector Association="pjmedimgdbModel.FK_User_Img_D" ManuallyRouted="false" />
         <AssociationConnector Association="pjmedimgdbModel.FK_User_Img_E" ManuallyRouted="false" />
