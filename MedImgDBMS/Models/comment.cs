@@ -20,7 +20,11 @@ namespace MedImgDBMS.Models
         public System.DateTime CmtCreateTime { get; set; }
         public long CmtCreator { get; set; }
         public long ImgID { get; set; }
-    
+        public comment()
+        {
+            CmtSeq = 1;
+            CmtCreateTime = DateTime.UtcNow;
+        }
         public virtual image image { get; set; }
         public virtual user user { get; set; }
     }
