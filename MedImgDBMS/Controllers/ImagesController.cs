@@ -87,21 +87,67 @@ namespace MedImgDBMS.Controllers
         // Post: Expert image view
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ExpImageView(ImgRepCmtViewModels IRVmodel, int id)
+        public ActionResult ExpImageView(ImgRepCmtViewModels IRCVmodel, int id, string submit)
         {
-            int userID = Convert.ToInt32(Session["UserID"].ToString());     // Get session user id
-
-            report rep = new report();
-            rep.RepText = IRVmodel.Report.RepText;     // Get report text from returned view model
-            rep.RepCreator = userID;                    // Get report creator user id
-            rep.ImgID = id;                             // Get image id
-
-            if (ModelState.IsValid)
+            if (IRCVmodel.Report.RepText is null)
             {
-                db.reports.Add(rep);
-                db.SaveChanges();                       // Add report record into db and save
+                ViewBag.Message = "Report text cannot be emtpy";        // When report text is null..... TODO......
             }
+            else
+            {
+                int userID = Convert.ToInt32(Session["UserID"].ToString());     // Get session user id
+                report repck = (from r in db.reports
+                                where r.ImgID == id
+                                select r).FirstOrDefault();                     // Check if it is first time to create report for this image
 
+                if (repck is null)      // When no existing report
+                {
+                    image img = db.images.Find(id);                     // Find the image
+                    report rep = new report();                          // Create a new report object
+                    rep.RepText = IRCVmodel.Report.RepText;
+                    rep.RepCreator = userID;
+                    rep.ImgID = id;                                     // Set report columns
+
+                    img.ImgStatus = img.ImgStatus + 1;                  // Change image status to report drafted
+
+                    if (ModelState.IsValid)
+                    {
+                        db.reports.Add(rep);
+                        db.Entry(img).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
+                else                    // When there is existing report
+                {
+                    report rep = (from r in db.reports
+                                  where r.ImgID == id
+                                  select r).FirstOrDefault();           // Find the existing report
+                    rep.RepText = IRCVmodel.Report.RepText;
+                    rep.RepCreateTime = DateTime.UtcNow;
+                    rep.RepCreator = userID;                            // Update report columns
+
+                    if (submit == "save")                               // Check if the report is saved again
+                    {
+                        if (ModelState.IsValid)
+                        {
+                            db.Entry(rep).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+                    else                                                // The report is submitted
+                    {
+                        image img = db.images.Find(id);
+                        img.ImgStatus = img.ImgStatus + 1;              // Change image status to report finalised
+                        if (ModelState.IsValid)
+                        {
+                            db.Entry(rep).State = EntityState.Modified;
+                            db.Entry(img).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+
+                    }
+                }
+            }
             return RedirectToAction("ExpImageView", id);    // Reload page
         }
 
