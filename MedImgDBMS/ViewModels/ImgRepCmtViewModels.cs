@@ -10,6 +10,6 @@ namespace MedImgDBMS.ViewModels
     {
         public image Image { get; set; }
         public report Report { get; set; }
-        public List<comment> Comments { get; set; }
+        public comment Comment { get; set; }
     }
 }

@@ -39,15 +39,19 @@ namespace MedImgDBMS.Controllers
         // Doctor image view page
         public ActionResult DocImageView(long? id)
         {
-            image img = db.images.Find(id);               // Find images belong to user id in DB
+            image img = db.images.Find(id);                 // Find images belong to user id in DB
             report rep = (from r in db.reports
                           where r.ImgID == id
-                          select r).FirstOrDefault();       // Find reports belong to his image
+                          select r).FirstOrDefault();       // Find report belong to the image
+            comment cmt = (from s in db.comments
+                           where s.ImgID == id
+                           select s).FirstOrDefault();      // Find comment belong to the image
 
             var view = new ImgRepCmtViewModels()               // Initialise a view model for passing into view
             {
                 Image = img,
-                Report = rep
+                Report = rep,
+                Comment = cmt
             };
 
             string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
@@ -59,8 +63,65 @@ namespace MedImgDBMS.Controllers
         // Post: Doctor image view
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DocImageView(int id)
+        public ActionResult DocImageView(ImgRepCmtViewModels IRCVmodel, int id, string submit)
         {
+            if (IRCVmodel.Comment.CmtText is null)
+            {
+                ViewBag.Message = "Comment text cannot be emtpy";        // When comment text is null..... TODO......
+            }
+            else
+            {
+                int userID = Convert.ToInt32(Session["UserID"].ToString());     // Get session user id
+                comment cmtck = (from c in db.comments
+                                 where c.ImgID == id
+                                 select c).FirstOrDefault();                     // Check if it is first time to create comment for this image
+
+                if (cmtck is null)      // When no existing comment
+                {
+                    image img = db.images.Find(id);                     // Find the image
+                    comment cmt = new comment();                        // Create a new comment object
+                    cmt.CmtText = IRCVmodel.Comment.CmtText;
+                    cmt.CmtCreator = userID;
+                    cmt.ImgID = id;                                     // Set comment columns
+
+                    img.ImgStatus = img.ImgStatus + 1;                  // Change image status to comment uploaded
+
+                    if (ModelState.IsValid)
+                    {
+                        db.comments.Add(cmt);
+                        db.Entry(img).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
+                else                    // When there is existing comment
+                {
+                    comment cmt= (from c in db.comments
+                                  where c.ImgID == id
+                                  select c).FirstOrDefault();           // Find the existing comment
+                    cmt.CmtText = IRCVmodel.Comment.CmtText;
+                    cmt.CmtCreateTime = DateTime.UtcNow;
+                    cmt.CmtCreator = userID;                            // Update comment columns
+
+                    if (submit == "save")                               // Check if the comment is saved again
+                    {
+                        if (ModelState.IsValid)
+                        {
+                            db.Entry(cmt).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+                    else                                                // The image case is closed
+                    {
+                        image img = db.images.Find(id);
+                        img.ImgStatus = img.ImgStatus + 1;              // Change image status to closed
+                        {
+                            db.Entry(cmt).State = EntityState.Modified;
+                            db.Entry(img).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
             return RedirectToAction("DocImageView", id);    // Reload page
         }
 
