@@ -41,28 +41,41 @@
                 <dd class="clearfix">@Html.DisplayFor(model => model.Image.Expuser.UserFName) @Html.DisplayFor(model => model.Image.Expuser.UserLName)</dd>
             </dl>
             <hr />
-            @*@if (Model.Report != null)
-            {*@
+            @if (Model.Report != null)
+            {
                 <label>Report:</label>
                 <p>@Html.DisplayFor(model => model.Report.RepText)</p>
-                <br />
+                <hr />
 
                 <label>Doctor Comment:</label>
                 <br />
-                @* to do..*@
-
-                @using (Html.BeginForm())
+                if (Model.Image.ImgStatus != 5)
                 {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group shadow-textarea">
-                        <textarea class="form-control z-depth-1" id="cmtText" name="cmtText" rows="3" placeholder="Write comment here..."></textarea>
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <button class="btn btn-primary" type="submit" id="submit">ADD COMMENT</button>
+                    using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group shadow-textarea">
+                            @Html.TextAreaFor(m => m.Comment.CmtText, new { @class = "form-control z-depth-1", @placeholder = "Write comment here..." })
+                            @Html.ValidationMessageFor(m => m.Comment.CmtText, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <button class="btn btn-primary" type="submit" name="submit" id="save" value="save">SAVE</button>
+                            <hr />
+                            @if (Model.Image.ImgStatus == 4)
+                            {
+                                <button class="btn btn-primary" type="submit" name="submit" id="submit" value="close">CLOSE CASE</button>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div>
+                    <p>@Html.DisplayFor(model => model.Comment.CmtText)</p>
                     </div>
                 }
-            @*}*@
+            }
         </div>
         <p>
             @Html.ActionLink("Back to List", "Index")
