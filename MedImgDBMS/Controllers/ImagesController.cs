@@ -16,12 +16,53 @@ namespace MedImgDBMS.Controllers
         private pjmedimgdbEntities db = new pjmedimgdbEntities();
 
         // GET: Images
-        public ActionResult Index()
+        public ActionResult Index(string preColumn, string searchString, string statusString)
         {
             int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
+            List<SelectListItem> SearchCol = new List<SelectListItem>()     // Set columns that can be searched by
+            {
+               new SelectListItem{Text="Image Name", Value = "1"},
+               new SelectListItem{Text="Patient Name", Value = "2"},
+               new SelectListItem{Text="Image Status", Value = "3"}
+            };
+
+            var StatLst = new List<string>();                   // Create a new list for image status
+            var StatQry = (from i in db.images
+                           where (i.ImgDocID == userID || i.ImgExpID == userID)
+                           orderby i.imagestatu.ImgStatusName
+                           select i.imagestatu.ImgStatusName).Distinct();    // Get distinct image status that a user has
+            StatLst.AddRange(StatQry);      // Add distinct image status to the list
+
+            ViewBag.statList = new SelectList(StatLst);                         // Set image status dropdown list in viewbag
+            ViewBag.searchCol = new SelectList(SearchCol, "Value", "Text");     // Set search column dropdown list in viewbag
+            ViewBag.precolumn = "1";                                            // Set previously searched column in viewbag, default at 1
+
+            if (preColumn == "3")
+                ViewBag.preColumn = "3";    // When last search was using the image status column
+
             var images = from img in db.images  
                          where (img.ImgDocID == userID || img.ImgExpID == userID)
-                         select img;                                                                        // LINQ to select only user viewable images
+                         select img;                                                            // LINQ to select only user viewable images
+
+            if (!String.IsNullOrEmpty(searchString) || !String.IsNullOrEmpty(statusString))     // Check if either text area or status dropdown list are both empty         
+            {
+                int col = int.Parse(preColumn);         // Get selected search column                                                
+                switch (col)
+                {
+                    case 1:     // When image name is selected
+                        images = images.Where(s => s.ImgName.Contains(searchString));
+                        break;
+                    case 2:     // When patient name is selected
+                        images = images.Where(s => s.patient.PatLName.Contains(searchString) || s.patient.PatFName.Contains(searchString));
+                        break;
+                    case 3:     // When image status is selected
+                        images = images.Where(s => s.imagestatu.ImgStatusName == (statusString));
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             ViewBag.userName = (from usr in db.users
                                 where (usr.UserID == userID)
