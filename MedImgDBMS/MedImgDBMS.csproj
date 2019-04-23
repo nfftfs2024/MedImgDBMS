@@ -204,10 +204,11 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Context\ApplicationDataContext.cs" />
     <Compile Include="Controllers\AboutController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ImagesController.cs" />
+    <Compile Include="Controllers\DocExpController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\OtherController.cs" />
     <Compile Include="Controllers\PortfolioController.cs" />
@@ -365,13 +366,18 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Shared\_LayoutLogin.cshtml" />
-    <Content Include="Views\Images\Create.cshtml" />
-    <Content Include="Views\Images\Delete.cshtml" />
-    <Content Include="Views\Images\Details.cshtml" />
-    <Content Include="Views\Images\Edit.cshtml" />
-    <Content Include="Views\Images\Index.cshtml" />
-    <Content Include="Views\Images\ExpImageView.cshtml" />
-    <Content Include="Views\Images\DocImageView.cshtml" />
+    <Content Include="Views\DocExp\Create.cshtml" />
+    <Content Include="Views\DocExp\Delete.cshtml" />
+    <Content Include="Views\DocExp\Details.cshtml" />
+    <Content Include="Views\DocExp\Edit.cshtml" />
+    <Content Include="Views\DocExp\Index.cshtml" />
+    <Content Include="Views\DocExp\ExpImageView.cshtml" />
+    <Content Include="Views\DocExp\DocImageView.cshtml" />
+    <Content Include="Views\Admin\Create.cshtml" />
+    <Content Include="Views\Admin\Delete.cshtml" />
+    <Content Include="Views\Admin\Details.cshtml" />
+    <Content Include="Views\Admin\Edit.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

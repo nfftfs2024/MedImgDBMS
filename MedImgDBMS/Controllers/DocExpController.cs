@@ -11,7 +11,7 @@ using MedImgDBMS.ViewModels;
 
 namespace MedImgDBMS.Controllers
 {
-    public class ImagesController : Controller
+    public class DocExpController : Controller
     {
         private pjmedimgdbEntities db = new pjmedimgdbEntities();
 
