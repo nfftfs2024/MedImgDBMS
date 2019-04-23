@@ -61,7 +61,7 @@ namespace MedImgDBMS.Controllers
                         else
                         {
                             message = "Account does not exist!!";
-images                        }
+                        }
                     }
                     else
                         message = "Enter your account and password";

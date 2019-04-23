@@ -366,10 +366,6 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Shared\_LayoutLogin.cshtml" />
-    <Content Include="Views\DocExp\Create.cshtml" />
-    <Content Include="Views\DocExp\Delete.cshtml" />
-    <Content Include="Views\DocExp\Details.cshtml" />
-    <Content Include="Views\DocExp\Edit.cshtml" />
     <Content Include="Views\DocExp\Index.cshtml" />
     <Content Include="Views\DocExp\ExpImageView.cshtml" />
     <Content Include="Views\DocExp\DocImageView.cshtml" />
