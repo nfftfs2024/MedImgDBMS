@@ -126,7 +126,7 @@ namespace MedImgDBMS.Controllers
         }
 
         // Doctor image view page
-        public ActionResult DocImageView(long? id)
+        public ActionResult DocImageView(long? id, int? page, string sortOrder, string currentFilter, string preColumn, string sucMsg)
         {
             image img = db.images.Find(id);                 // Find images belong to user id in DB
             report rep = (from r in db.reports
@@ -145,18 +145,27 @@ namespace MedImgDBMS.Controllers
 
             string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
             string img_link = "http://" + server + "/" + img.ImgPath;   // Concatenate image URL
-            ViewBag.link = img_link;                                      // Create viewbag variable for image URL
+
+            ViewBag.link = img_link;        // Create viewbag variable for image URL
+            ViewBag.Page = page;            // Create viewbag variable for current page
+            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
+            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.SuccessMsg = sucMsg;    // Create viewbag variable for comment successful message
             return View(view);
         }
 
         // Post: Doctor image view
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DocImageView(ImgRepCmtViewModels IRCVmodel, int id, string submit)
+        public ActionResult DocImageView(ImgRepCmtViewModels IRCVmodel, int id, string submit, string page, string sortOrder, string currentFilter, string preColumn)
         {
+            int intPage = Convert.ToInt32(page);    // Convert page to integer
+            string message = "";                    // Intialise message 
+
             if (IRCVmodel.Comment.CmtText is null)
             {
-                ViewBag.Message = "Comment text cannot be emtpy";        // When comment text is null..... TODO......
+                message = "Comment text cannot be emtpy";        // When comment text is null
             }
             else
             {
@@ -180,6 +189,7 @@ namespace MedImgDBMS.Controllers
                         db.comments.Add(cmt);
                         db.Entry(img).State = EntityState.Modified;
                         db.SaveChanges();
+                        message = "Comment created";
                     }
                 }
                 else                    // When there is existing comment
@@ -197,6 +207,7 @@ namespace MedImgDBMS.Controllers
                         {
                             db.Entry(cmt).State = EntityState.Modified;
                             db.SaveChanges();
+                            message = "Comment saved";
                         }
                     }
                     else                                                // The image case is closed
@@ -207,15 +218,16 @@ namespace MedImgDBMS.Controllers
                             db.Entry(cmt).State = EntityState.Modified;
                             db.Entry(img).State = EntityState.Modified;
                             db.SaveChanges();
+                            message = "Image case closed";
                         }
                     }
                 }
             }
-            return RedirectToAction("DocImageView", id);    // Reload page
+            return RedirectToAction("DocImageView", new { id, sucMsg = message, page = intPage, sortOrder = sortOrder, currentFilter = currentFilter, preColumn = preColumn });    // Reload page
         }
 
         // Expert image view page
-        public ActionResult ExpImageView(long? id)
+        public ActionResult ExpImageView(long? id, int? page, string sortOrder, string currentFilter, string preColumn, string sucMsg)
         {
             image img = db.images.Find(id);                // Find images belong to user id in DB
             report rep = (from r in db.reports
@@ -230,18 +242,27 @@ namespace MedImgDBMS.Controllers
 
             string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
             string img_link = "http://" + server + "/" + img.ImgPath;    // Concatenate image URL
-            ViewBag.link = img_link;                                      // Create viewbag variable for image URL
+
+            ViewBag.link = img_link;        // Create viewbag variable for image URL
+            ViewBag.Page = page;            // Create viewbag variable for current page
+            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
+            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.SuccessMsg = sucMsg;    // Create viewbag variable for comment successful message
             return View(view);
         }
 
         // Post: Expert image view
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ExpImageView(ImgRepCmtViewModels IRCVmodel, int id, string submit)
+        public ActionResult ExpImageView(ImgRepCmtViewModels IRCVmodel, int id, string submit, string page, string sortOrder, string currentFilter, string preColumn)
         {
+            int intPage = Convert.ToInt32(page);    // Convert page to integer
+            string message = "";                    // Intialise message 
+
             if (IRCVmodel.Report.RepText is null)
             {
-                ViewBag.Message = "Report text cannot be emtpy";        // When report text is null..... TODO......
+                message = "Report text cannot be emtpy";        // When report text is null
             }
             else
             {
@@ -265,6 +286,7 @@ namespace MedImgDBMS.Controllers
                         db.reports.Add(rep);
                         db.Entry(img).State = EntityState.Modified;
                         db.SaveChanges();
+                        message = "Report created";
                     }
                 }
                 else                    // When there is existing report
@@ -282,6 +304,7 @@ namespace MedImgDBMS.Controllers
                         {
                             db.Entry(rep).State = EntityState.Modified;
                             db.SaveChanges();
+                            message = "Report saved";
                         }
                     }
                     else                                                // The report is submitted
@@ -293,12 +316,13 @@ namespace MedImgDBMS.Controllers
                             db.Entry(rep).State = EntityState.Modified;
                             db.Entry(img).State = EntityState.Modified;
                             db.SaveChanges();
+                            message = "Report submitted";
                         }
 
                     }
                 }
             }
-            return RedirectToAction("ExpImageView", id);    // Reload page
+            return RedirectToAction("ExpImageView", new { id, sucMsg = message, page = intPage, sortOrder = sortOrder, currentFilter = currentFilter, preColumn = preColumn });    // Reload page
         }
 
         protected override void Dispose(bool disposing)

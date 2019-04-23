@@ -3,6 +3,22 @@
 @{
     ViewBag.Title = "Expert Image View";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var message = ViewBag.SuccessMsg;
+    int pageint = ViewBag.Page;
+    string page = pageint.ToString();
+    string sortOrder = ViewBag.Order;
+    string currentFilter = ViewBag.Filter;
+    string preCol = ViewBag.PreColumn;
+}
+
+@section CustomScripts
+{
+    <script type="text/javascript">
+    var message = '@message';
+        if (message) {
+            alert(message);
+        }
+    </script>
 }
 
 <div class="container">
@@ -49,9 +65,25 @@
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group shadow-textarea">
                         <label for="ReportTextarea">Report:</label>
-                        @Html.TextAreaFor(m => m.Report.RepText, new { @class = "form-control z-depth-1", @placeholder = "Write report here..." })
+                        @Html.TextAreaFor(m => m.Report.RepText, new { @class = "form-control-textbox z-depth-1", @placeholder = "Write report here..." })
                         @Html.ValidationMessageFor(m => m.Report.RepText, "", new { @class = "text-danger" })
                     </div>
+                    if (page != null)
+                    {
+                        @Html.Hidden("page", page)
+                    }
+                    if (sortOrder != null)
+                    {
+                        @Html.Hidden("sortOrder", sortOrder)
+                    }
+                    if (currentFilter != null)
+                    {
+                        @Html.Hidden("currentFilter", currentFilter)
+                    }
+                    if (preCol != null)
+                    {
+                        @Html.Hidden("preColumn", preCol)
+                    }
                     <div class="form-group col-lg-12">
                         <button class="btn btn-primary" type="submit" name="submit" id="save" value="save">SAVE</button>
                         @if (Model.Image.ImgStatus == 2)
@@ -59,7 +91,7 @@
                             <button class="btn btn-primary" type="submit" name="submit" id="submit" value="submit">SUBMIT</button>
                         }
                     </div>
-                };
+                }
             }
             else
             {
@@ -70,7 +102,7 @@
             }
         </div>
         <p>
-            @Html.ActionLink("Back to List", "Index")
+            @Html.ActionLink("Back to List", "Index", new { page = ViewBag.Page, sortOrder = ViewBag.Order, currentFilter = ViewBag.Filter, preColumn = ViewBag.PreColumn })
         </p>
     </div>
 </div>
