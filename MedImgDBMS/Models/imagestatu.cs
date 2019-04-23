@@ -21,7 +21,7 @@ namespace MedImgDBMS.Models
         }
     
         public long ImgStatID { get; set; }
-        public string StatusName { get; set; }
+        public string ImgStatusName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<image> images { get; set; }

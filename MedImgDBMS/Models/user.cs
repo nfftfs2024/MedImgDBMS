@@ -11,6 +11,7 @@ namespace MedImgDBMS.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     
     public partial class user
     {
@@ -25,8 +26,11 @@ namespace MedImgDBMS.Models
         }
     
         public long UserID { get; set; }
+        [DisplayName("Last Name")]
         public string UserLName { get; set; }
+        [DisplayName("First Name")]
         public string UserFName { get; set; }
+        public string Email { get; set; }
         public long UserRoleID { get; set; }
     
         public virtual account account { get; set; }

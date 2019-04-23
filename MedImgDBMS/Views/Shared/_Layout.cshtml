@@ -13,6 +13,7 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    @RenderSection("CustomScripts", required: false)
 </head>
 <body>
 
@@ -41,6 +42,7 @@
                     <li>
                     </li>
                     <li>
+                        <a href="" style="font-size:13px; padding:12px; color:white;">Hi! @ViewBag.userName</a>
                     </li>
                     <li>
                         @Html.ActionLink("Logout", "Logout", "Login")

@@ -11,15 +11,20 @@ namespace MedImgDBMS.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+
     public partial class account
     {
         public long AcctID { get; set; }
+        [DisplayName("Account Name")]
         public string AcctLName { get; set; }
+        [DisplayName("Password")]
         public string AcctPasswd { get; set; }
-        public string AcctStatus { get; set; }
+        [DisplayName("Account Status")]
+        public long AcctStatus { get; set; }
         public System.DateTime AcctCreateTime { get; set; }
     
+        public virtual accountstatu accountstatu { get; set; }
         public virtual user user { get; set; }
     }
 }

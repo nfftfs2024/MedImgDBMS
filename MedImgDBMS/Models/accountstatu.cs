@@ -11,29 +11,19 @@ namespace MedImgDBMS.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-
-    public partial class patient
+    
+    public partial class accountstatu
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public patient()
+        public accountstatu()
         {
-            this.images = new HashSet<image>();
+            this.accounts = new HashSet<account>();
         }
     
-        public long PatID { get; set; }
-        [DisplayName("Patient Last Name")]
-        public string PatLName { get; set; }
-        [DisplayName("Patient First Name")]
-        public string PatFName { get; set; }
-        [DisplayName("Birthday")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public Nullable<System.DateTime> DOB { get; set; }
-        [DisplayName("Gender")]
-        public string Gender { get; set; }
+        public long AcctStatID { get; set; }
+        public string AcctStatusName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<image> images { get; set; }
+        public virtual ICollection<account> accounts { get; set; }
     }
 }

@@ -1,11 +1,49 @@
 ﻿@model IEnumerable<MedImgDBMS.Models.image>
 
+@section CustomScripts
+{
+    <script type="text/javascript">
+        function ShowHide() {
+            if ($('#preColumn').val() == "3") {
+                $('#statusString').show();      // show dropdown list
+                $('#searchString').hide();      // hide text area
+                $('#searchString').val('');     // reset the text area value
+            }
+            else {
+                $('#statusString').hide();      // hide dropdown list
+                $('#searchString').show();      // show text area
+                $('#statusString').val('All');  // reset the dropdown list value
+            }
+        }
+    </script>
+}
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    SelectList searchCol = ViewBag.searchCol;
+    SelectList statList = ViewBag.statList;
+    string preCol = ViewBag.preColumn;
 }
 
 <h2>Medical Image List</h2>
+@using (Html.BeginForm())
+{
+<p>
+    @Html.DropDownList("preColumn", searchCol, new { onchange = "ShowHide()" })
+    @if (preCol == "1")
+    {
+        @Html.TextBox("searchString")
+        @Html.DropDownList("statusString", statList, "All", new { style = "display:none;" })
+    }
+    else
+    {
+        @Html.DropDownList("statusString", statList, "All")
+        @Html.TextBox("searchString", "", new { style = "display:none;" })
+    }
+    <input type="submit" value="Search" />
+</p>
+}
 
 <table class="table">
     <tr>
@@ -44,7 +82,7 @@
                 @Html.DisplayFor(modelItem => item.ImgCreateTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.imagestatu.StatusName)
+                @Html.DisplayFor(modelItem => item.imagestatu.ImgStatusName)
             </td>
             @*<td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.ImgID }) |

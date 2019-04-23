@@ -11,6 +11,7 @@ namespace MedImgDBMS.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     
     public partial class image
     {
@@ -19,26 +20,37 @@ namespace MedImgDBMS.Models
         {
             this.comments = new HashSet<comment>();
             this.reports = new HashSet<report>();
+            this.ImgPath = "images/";
+            this.ImgCreateTime = DateTime.UtcNow;
+            this.ImgStatus = 1;
+            this.RepStatus = 1;
         }
-    
+        [DisplayName("Image ID")]
         public long ImgID { get; set; }
+        [DisplayName("Image Path")]
         public string ImgPath { get; set; }
+        [DisplayName("Image Name")]
         public string ImgName { get; set; }
+        [DisplayName("Create Time")]
         public System.DateTime ImgCreateTime { get; set; }
+        [DisplayName("Image Creator")]
         public long ImgCreator { get; set; }
+        [DisplayName("Expert")]
         public Nullable<long> ImgExpID { get; set; }
+        [DisplayName("Doctor")]
         public Nullable<long> ImgDocID { get; set; }
+        [DisplayName("Patient")]
         public long ImgPatID { get; set; }
-        public long StatusID { get; set; }
+        public long ImgStatus { get; set; }
         public long RepStatus { get; set; }
-        public long CmtStatus { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<comment> comments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<report> reports { get; set; }
-        public virtual patient patient { get; set; }
         public virtual imagestatu imagestatu { get; set; }
+        public virtual patient patient { get; set; }
+        public virtual reportstatu reportstatu { get; set; }
         public virtual user Createuser { get; set; }
         public virtual user Docuser { get; set; }
         public virtual user Expuser { get; set; }
