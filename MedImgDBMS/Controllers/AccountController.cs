@@ -4,13 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MedImgDBMS.Models;
+using System.Web.Security;
 
 namespace MedImgDBMS.Controllers
 {
     public class AccountController : Controller
     {
         // GET: Login
-        //static List<account> acct = new List<account>();
         [AllowAnonymous]
         public ActionResult Login()
         {
@@ -36,6 +36,7 @@ namespace MedImgDBMS.Controllers
                             obj = db.accounts.Where(a => a.AcctLName.Equals(objUser.AcctLName) && a.AcctPasswd.Equals(objUser.AcctPasswd)).FirstOrDefault();    // Compare account name and passwd with DB
                             if (obj != null)
                             {
+                                FormsAuthentication.SetAuthCookie(obj.AcctLName, true);     // Set authentication cookie with account name
                                 Session["UserID"] = obj.AcctID.ToString();          // Get session user id
                                 Session["AcctName"] = obj.AcctLName.ToString();     // Get session account name
 
@@ -45,11 +46,11 @@ namespace MedImgDBMS.Controllers
                                 switch (role)                                       // Redirect page according to roles
                                 {
                                     case "1":
-                                        return RedirectToAction("UserDashBoard");
+                                        return RedirectToAction("Index", "Admin");
                                     case "2":
-                                        return RedirectToAction("Index", "Images");
+                                        return RedirectToAction("Index", "DocExp");
                                     case "3":
-                                        return RedirectToAction("Index", "Images");
+                                        return RedirectToAction("Index", "DocExp");
                                 }
                             }
                             else
@@ -72,6 +73,7 @@ namespace MedImgDBMS.Controllers
 
         public ActionResult Logout()                    // For system logout
         {
+            FormsAuthentication.SignOut();      
             Session.Abandon();
             return RedirectToAction("Login");
         }

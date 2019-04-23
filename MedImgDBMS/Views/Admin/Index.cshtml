@@ -1,0 +1,82 @@
+﻿@model IEnumerable<MedImgDBMS.Models.image>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ImgPath)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImgName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImgCreateTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.imagestatu.ImgStatusName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.patient.PatLName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.reportstatu.RepStatusName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Createuser.UserLName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Docuser.UserLName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Expuser.UserLName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImgPath)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImgName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImgCreateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.imagestatu.ImgStatusName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.patient.PatLName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.reportstatu.RepStatusName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Createuser.UserLName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Docuser.UserLName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Expuser.UserLName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ImgID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ImgID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ImgID })
+        </td>
+    </tr>
+}
+
+</table>
