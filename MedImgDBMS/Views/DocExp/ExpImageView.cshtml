@@ -41,8 +41,11 @@
             <img src=@ViewBag.link class="img-responsive">
         </div>
         <div class="col-md-4">
-            <h3>Patient Name</h3>
+            <h3 style="margin-left: 0; margin-top: 0; margin-bottom: 5px;">Patient Name</h3>
             <p>@Html.DisplayFor(model => model.Image.patient.PatFName) @Html.DisplayFor(model => model.Image.patient.PatLName)</p>
+            <p><b>@Html.DisplayNameFor(model => model.Image.patient.DOB)</b>&nbsp @Html.DisplayFor(model => model.Image.patient.DOB, "{0:dd/MM/yyyy}")</p>
+            <p><b>@Html.DisplayNameFor(model => model.Image.patient.Gender)</b>&nbsp @Html.DisplayFor(model => model.Image.patient.Gender)</p>
+
             <dl class="dl-horizontal">
                 <dt>@Html.DisplayName("Image Status:")</dt>
                 <dd class="clearfix">@Html.DisplayFor(model => model.Image.imagestatu.ImgStatusName)</dd>
@@ -58,48 +61,48 @@
             </dl>
             <hr />
             @if (Model.Image.ImgStatus != 3)
-            {
-                using (Html.BeginForm())
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group shadow-textarea">
-                        <label for="ReportTextarea">Report:</label>
-                        @Html.TextAreaFor(m => m.Report.RepText, new { @class = "form-control-textbox z-depth-1", @placeholder = "Write report here..." })
-                        @Html.ValidationMessageFor(m => m.Report.RepText, "", new { @class = "text-danger" })
-                    </div>
-                    if (page != null)
-                    {
-                        @Html.Hidden("page", page)
-                    }
-                    if (sortOrder != null)
-                    {
-                        @Html.Hidden("sortOrder", sortOrder)
-                    }
-                    if (currentFilter != null)
-                    {
-                        @Html.Hidden("currentFilter", currentFilter)
-                    }
-                    if (preCol != null)
-                    {
-                        @Html.Hidden("preColumn", preCol)
-                    }
-                    <div class="form-group col-lg-12">
-                        <button class="btn btn-primary" type="submit" name="submit" id="save" value="save">SAVE</button>
-                        @if (Model.Image.ImgStatus == 2)
-                        {
-                            <button class="btn btn-primary" type="submit" name="submit" id="submit" value="submit">SUBMIT</button>
-                        }
-                    </div>
-                }
-            }
-            else
-            {
-                <div>
-                    <label>Report:</label>
-                    <p>@Html.DisplayFor(model => model.Report.RepText)</p>
-                </div>
-            }
+    {
+        using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group shadow-textarea">
+                <label for="ReportTextarea">Report:</label>
+                @Html.TextAreaFor(m => m.Report.RepText, new { @class = "form-control-textbox z-depth-1", @placeholder = "Write report here..." })
+                @Html.ValidationMessageFor(m => m.Report.RepText, "", new { @class = "text-danger" })
+            </div>
+    if (page != null)
+    {
+        @Html.Hidden("page", page)
+}
+if (sortOrder != null)
+{
+        @Html.Hidden("sortOrder", sortOrder)
+}
+if (currentFilter != null)
+{
+        @Html.Hidden("currentFilter", currentFilter)
+}
+if (preCol != null)
+{
+        @Html.Hidden("preColumn", preCol)
+}
+        <div class="form-group col-lg-12">
+            <button class="btn btn-primary" type="submit" name="submit" id="save" value="save">SAVE</button>
+            @if (Model.Image.ImgStatus == 2)
+    {
+        <button class="btn btn-primary" type="submit" name="submit" id="submit" value="submit" onclick="return confirm('Are you sure to submit? The report text cannot be modified after you submit.')">SUBMIT</button>
+}
+        </div>
+}
+}
+else
+{
+        <div>
+            <label>Report:</label>
+            <p>@Html.DisplayFor(model => model.Report.RepText)</p>
+        </div>
+}
         </div>
         <p>
             @Html.ActionLink("Back to List", "Index", new { page = ViewBag.Page, sortOrder = ViewBag.Order, currentFilter = ViewBag.Filter, preColumn = ViewBag.PreColumn })

@@ -57,7 +57,7 @@ namespace MedImgDBMS.Controllers
                 searchString = currentFilter;   // Conditions to keep filtering string when user switches pages
 
             ViewBag.CurrentFilter = searchString;   // Pass current filtering string
-            ViewBag.Page = page;                    // Pass page
+            ViewBag.Page = (page ?? 1);                    // Pass page
 
             if (preColumn == "3" && searchString == "All")      // Convert filtering string to null when filtering with "All" for image status
                 searchString = "";
