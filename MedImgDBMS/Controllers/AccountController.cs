@@ -7,16 +7,18 @@ using MedImgDBMS.Models;
 
 namespace MedImgDBMS.Controllers
 {
-    public class LoginController : Controller
+    public class AccountController : Controller
     {
         // GET: Login
         //static List<account> acct = new List<account>();
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Login(account objUser)
         {
@@ -66,18 +68,6 @@ namespace MedImgDBMS.Controllers
             }
             ViewBag.Message = message;
             return View(objUser);
-        }
-
-        public ActionResult AdminDashBoard()             // For backup admin page
-        {
-            if (Session["UserID"] != null)
-            {
-                return View();
-            }
-            else
-            {
-                return RedirectToAction("Login");
-            }
         }
 
         public ActionResult Logout()                    // For system logout
