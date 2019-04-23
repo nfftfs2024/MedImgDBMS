@@ -27,7 +27,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <!-- You'll want to use a responsive image option so this logo looks good on devices - I recommend using something like retina.js (do a quick Google search for it and you'll find it) -->
-                @Html.ActionLink("Medical Image DBMS", "Index", new { controller = "Images" }, new { @class = "navbar-brand" })
+                @Html.Label("Medical Image DBMS", new { @class = "navbar-brand" })
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -45,7 +45,7 @@
                         <a href="" style="font-size:13px; padding:12px; color:white;">Hi! @ViewBag.userName</a>
                     </li>
                     <li>
-                        @Html.ActionLink("Logout", "Logout", "Login")
+                        @Html.ActionLink("Logout", "Logout", "Account")
                     </li>
                 </ul>
             </div>
