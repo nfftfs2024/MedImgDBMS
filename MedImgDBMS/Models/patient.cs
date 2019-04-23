@@ -11,7 +11,9 @@ namespace MedImgDBMS.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+
     public partial class patient
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,9 +23,14 @@ namespace MedImgDBMS.Models
         }
     
         public long PatID { get; set; }
+        [DisplayName("Patient Last Name")]
         public string PatLName { get; set; }
+        [DisplayName("Patient First Name")]
         public string PatFName { get; set; }
+        [DisplayName("Birthday")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public Nullable<System.DateTime> DOB { get; set; }
+        [DisplayName("Gender")]
         public string Gender { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

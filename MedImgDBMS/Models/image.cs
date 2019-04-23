@@ -11,6 +11,7 @@ namespace MedImgDBMS.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     
     public partial class image
     {
@@ -19,15 +20,26 @@ namespace MedImgDBMS.Models
         {
             this.comments = new HashSet<comment>();
             this.reports = new HashSet<report>();
+            this.ImgPath = "images/";
+            this.ImgCreateTime = DateTime.UtcNow;
+            this.ImgStatus = 1;
+            this.RepStatus = 1;
         }
-    
+        [DisplayName("Image ID")]
         public long ImgID { get; set; }
+        [DisplayName("Image Path")]
         public string ImgPath { get; set; }
+        [DisplayName("Image Name")]
         public string ImgName { get; set; }
+        [DisplayName("Create Time")]
         public System.DateTime ImgCreateTime { get; set; }
+        [DisplayName("Image Creator")]
         public long ImgCreator { get; set; }
+        [DisplayName("Expert")]
         public Nullable<long> ImgExpID { get; set; }
+        [DisplayName("Doctor")]
         public Nullable<long> ImgDocID { get; set; }
+        [DisplayName("Patient")]
         public long ImgPatID { get; set; }
         public long ImgStatus { get; set; }
         public long RepStatus { get; set; }

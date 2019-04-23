@@ -11,20 +11,24 @@ namespace MedImgDBMS.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class report
     {
         public long RepID { get; set; }
         public string RepPath { get; set; }
+        [Required(ErrorMessage = "Report text cannot be empty")]
         public string RepText { get; set; }
         public System.DateTime RepCreateTime { get; set; }
         public long RepCreator { get; set; }
         public long ImgID { get; set; }
+
         public report()
         {
             RepPath = "";
             RepCreateTime = DateTime.UtcNow;
         }
+
         public virtual image image { get; set; }
         public virtual user user { get; set; }
     }

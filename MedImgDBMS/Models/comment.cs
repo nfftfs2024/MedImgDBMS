@@ -11,20 +11,24 @@ namespace MedImgDBMS.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class comment
     {
         public long CmtID { get; set; }
         public long CmtSeq { get; set; }
+        [Required(ErrorMessage = "Comment text cannot be empty")]
         public string CmtText { get; set; }
         public System.DateTime CmtCreateTime { get; set; }
         public long CmtCreator { get; set; }
         public long ImgID { get; set; }
+
         public comment()
         {
             CmtSeq = 1;
             CmtCreateTime = DateTime.UtcNow;
         }
+
         public virtual image image { get; set; }
         public virtual user user { get; set; }
     }
