@@ -194,13 +194,35 @@ namespace MedImgDBMS.Controllers
         // GET: Admin/Create
         public ActionResult Create()
         {
-            ViewBag.ImgStatus = new SelectList(db.imagestatus, "ImgStatID", "ImgStatusName");
-            ViewBag.ImgPatID = new SelectList(db.patients, "PatID", "PatLName");
-            ViewBag.RepStatus = new SelectList(db.reportstatus, "RepStatID", "RepStatusName");
-            ViewBag.ImgCreator = new SelectList(db.users, "UserID", "UserLName");
-            ViewBag.ImgDocID = new SelectList(db.users, "UserID", "UserLName");
-            ViewBag.ImgExpID = new SelectList(db.users, "UserID", "UserLName");
-            return View();
+            var img = from i in db.images
+                      select i.ImgID;                                       // Get current image IDs in database
+            int imgMax = Convert.ToInt32(img.Max().ToString()) + 1;         // Get the next image ID
+            string imgName = "image_" + imgMax.ToString().PadLeft(6, '0');  // Create image name and pad the image number
+
+            var Patient = db.patients.Select(p => new SelectListItem                                // Create patient selection list
+            {
+                Text = p.PatFName + " " + p.PatLName,
+                Value = p.PatID.ToString()
+            });
+            var DocUser = db.users.Where(p => p.UserRoleID == 2).Select(p => new SelectListItem     // Create doctor selection list
+            {
+                Text = p.UserFName + " " + p.UserLName,
+                Value = p.UserID.ToString()
+            });
+            var ExpUser = db.users.Where(p => p.UserRoleID == 3).Select(p => new SelectListItem     // Create expert selection list
+            {
+                Text = p.UserFName + " " + p.UserLName,
+                Value = p.UserID.ToString()
+            });
+
+            ViewBag.ImgID = imgMax;             // Pass the image ID
+            ViewBag.ImgName = imgName;          // Pass the image name
+            ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text");       // Pass the patient selection list
+            ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the doctor selection list
+            ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the expert selection list
+
+            image image = new image();      // Create a new image object
+            return View(image);
         }
 
         // POST: Admin/Create
@@ -208,21 +230,48 @@ namespace MedImgDBMS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ImgID,ImgPath,ImgName,ImgCreateTime,ImgCreator,ImgExpID,ImgDocID,ImgPatID,ImgStatus,RepStatus")] image image)
+        public ActionResult Create(image newImg, string PatientId)
         {
-            if (ModelState.IsValid)
+            int userID = Convert.ToInt32(Session["UserID"].ToString());     // Get session user id
+            newImg.ImgPath = newImg.ImgPath + newImg.ImgName + ".jpg";      // Set image path
+            newImg.ImgCreator = userID;                                     // Set image creator id
+
+            if (ModelState.IsValid)         // Add image
             {
-                db.images.Add(image);
+                db.images.Add(newImg);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { sucMsg = newImg.ImgName + " created" });     // Go back to list and display successful message
             }
 
-            ViewBag.ImgStatus = new SelectList(db.imagestatus, "ImgStatID", "ImgStatusName", image.ImgStatus);
-            ViewBag.ImgPatID = new SelectList(db.patients, "PatID", "PatLName", image.ImgPatID);
-            ViewBag.RepStatus = new SelectList(db.reportstatus, "RepStatID", "RepStatusName", image.RepStatus);
-            ViewBag.ImgCreator = new SelectList(db.users, "UserID", "UserLName", image.ImgCreator);
-            ViewBag.ImgDocID = new SelectList(db.users, "UserID", "UserLName", image.ImgDocID);
-            ViewBag.ImgExpID = new SelectList(db.users, "UserID", "UserLName", image.ImgExpID);
+            // If the model was invalid, display and do it over again
+            var img = from i in db.images
+                      select i.ImgID;                                       // Get current image IDs in database
+            int imgMax = Convert.ToInt32(img.Max().ToString()) + 1;         // Get the next image ID
+            string imgName = "image_" + imgMax.ToString().PadLeft(6, '0');  // Create image name and pad the image number
+
+            var Patient = db.patients.Select(p => new SelectListItem                                // Create patient selection list
+            {
+                Text = p.PatFName + " " + p.PatLName,
+                Value = p.PatID.ToString()
+            });
+            var DocUser = db.users.Where(p => p.UserRoleID == 2).Select(p => new SelectListItem     // Create doctor selection list
+            {
+                Text = p.UserFName + " " + p.UserLName,
+                Value = p.UserID.ToString()
+            });
+            var ExpUser = db.users.Where(p => p.UserRoleID == 3).Select(p => new SelectListItem     // Create expert selection list
+            {
+                Text = p.UserFName + " " + p.UserLName,
+                Value = p.UserID.ToString()
+            });
+
+            ViewBag.ImgID = imgMax;             // Pass the image ID
+            ViewBag.ImgName = imgName;          // Pass the image name
+            ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text");       // Pass the patient selection list
+            ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the doctor selection list
+            ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the expert selection list
+
+            image image = new image();      // Create a new image object
             return View(image);
         }
 
