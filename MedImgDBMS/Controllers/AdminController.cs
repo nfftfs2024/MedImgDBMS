@@ -61,7 +61,7 @@ namespace MedImgDBMS.Controllers
                 searchString = currentFilter;   // Conditions to keep filtering string when user switches pages
 
             ViewBag.CurrentFilter = searchString;   // Pass current filtering string
-            ViewBag.Page = (page ?? 1);                    // Pass page
+            ViewBag.Page = (page ?? 1);             // Pass page
 
             if (preColumn == "3" && searchString == "All")      // Convert filtering string to null when filtering with "All" for image status
                 searchString = "";
@@ -366,11 +366,7 @@ namespace MedImgDBMS.Controllers
                 Value = p.UserID.ToString()
             });
 
-            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
-            string img_link = "http://" + server + "/" + image.ImgPath;   // Concatenate image URL
-
-            ViewBag.link = img_link;        // Create viewbag variable for image URL
-            ViewBag.Page = page;            // Create viewbag variable for current page
+            ViewBag.Page = intPage;         // Create viewbag variable for current page
             ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
             ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
             ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column

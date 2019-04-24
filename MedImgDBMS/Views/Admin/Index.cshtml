@@ -38,93 +38,94 @@
     </script>
 }
 
-
 <h2>Medical Image List</h2>
-<button class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Admin")'">Create New</button>
-<hr />
-@using (Html.BeginForm("Index", "Admin", FormMethod.Get))
-{
-    <p>
-        @Html.DropDownList("preColumn", searchCol, new { onchange = "ShowHide()" })
-        @if (preCol == "3")
-        {
-            @Html.DropDownList("statusString", statList)
-            @Html.TextBox("searchString", "", new { style = "display:none;" })
-        }
-        else
-        {
-            @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
-            @Html.DropDownList("statusString", statList, new { style = "display:none;" })
-        }
-        <input type="submit" value="Search" />
-    </p>
-}
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.ActionLink("Image Name", "Index", new { sortOrder = ViewBag.ImgNameSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
-        </th>
-        <th>
-            @Html.ActionLink("Patient FirstName", "Index", new { sortOrder = ViewBag.PatFSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
-        </th>
-        <th>
-            @Html.ActionLink("Patient LastName", "Index", new { sortOrder = ViewBag.PatLSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
-        </th>
-        <th>
-            @Html.ActionLink("Create Time", "Index", new { sortOrder = ViewBag.TimeSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
-        </th>
-        <th>
-            @Html.ActionLink("Image Status", "Index", new { sortOrder = ViewBag.StatSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
-        </th>
-        <th>
-            @Html.ActionLink("Creator Name", "Index", new { sortOrder = ViewBag.CreatorSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
-        </th>
-        <th>
-            @Html.ActionLink("Doctor Name", "Index", new { sortOrder = ViewBag.DocSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
-        </th>
-        <th>
-            @Html.ActionLink("Stomatologist Name", "Index", new { sortOrder = ViewBag.ExpSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
+<button style="margin-left:50px" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Admin")'">Create New</button>
+<div class="container-list">
+    <hr />
+    @using (Html.BeginForm("Index", "Admin", FormMethod.Get))
     {
-    <tr>
-        <td>
-            @Html.ActionLink(@Html.DisplayFor(modelItem => item.ImgName).ToString(), "ImageView", new { id = item.ImgID, page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.patient.PatFName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.patient.PatLName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ImgCreateTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.imagestatu.ImgStatusName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Createuser.UserFName) @Html.DisplayFor(modelItem => item.Createuser.UserLName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Docuser.UserFName) @Html.DisplayFor(modelItem => item.Docuser.UserLName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Expuser.UserFName) @Html.DisplayFor(modelItem => item.Expuser.UserLName)
-        </td>
-        <td>
-            <button class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Admin", new { id = item.ImgID, page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })'">Edit</button>
-            <button class="btn btn-primary" onclick="location.href='@Url.Action("Delete", "Admin", new { id = item.ImgID })'">Delete</button>
-        </td>
-    </tr>
+        <p>
+            @Html.DropDownList("preColumn", searchCol, new { onchange = "ShowHide()" })
+            @if (preCol == "3")
+            {
+                @Html.DropDownList("statusString", statList)
+                @Html.TextBox("searchString", "", new { style = "display:none;" })
+            }
+            else
+            {
+                @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+                @Html.DropDownList("statusString", statList, new { style = "display:none;" })
+            }
+            <input type="submit" value="Search" />
+        </p>
     }
-</table>
-<br />
+
+    <table class="table">
+        <tr>
+            <th style="width: 10%">
+                @Html.ActionLink("Image Name", "Index", new { sortOrder = ViewBag.ImgNameSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Patient FirstName", "Index", new { sortOrder = ViewBag.PatFSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Patient LastName", "Index", new { sortOrder = ViewBag.PatLSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 12%">
+                @Html.ActionLink("Create Time", "Index", new { sortOrder = ViewBag.TimeSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Image Status", "Index", new { sortOrder = ViewBag.StatSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Creator Name", "Index", new { sortOrder = ViewBag.CreatorSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Doctor Name", "Index", new { sortOrder = ViewBag.DocSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Stomatologist Name", "Index", new { sortOrder = ViewBag.ExpSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 16%"></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 10%">
+                    @Html.ActionLink(@Html.DisplayFor(modelItem => item.ImgName).ToString(), "ImageView", new { id = item.ImgID, page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.patient.PatFName)
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.patient.PatLName)
+                </td>
+                <td style="width: 12%">
+                    @Html.DisplayFor(modelItem => item.ImgCreateTime, "{0:dd/MM/yyyy HH:mm:ss}")
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.imagestatu.ImgStatusName)
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.Createuser.UserFName) @Html.DisplayFor(modelItem => item.Createuser.UserLName)
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.Docuser.UserFName) @Html.DisplayFor(modelItem => item.Docuser.UserLName)
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.Expuser.UserFName) @Html.DisplayFor(modelItem => item.Expuser.UserLName)
+                </td>
+                <td style="width: 16%">
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Admin", new { id = item.ImgID, page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })'">Edit</button>
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Delete", "Admin", new { id = item.ImgID })'">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+    <br />
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
     @Html.PagedListPager(Model, page => Url.Action("Index",
-                new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol }))
+                     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol }))
+</div>
