@@ -276,7 +276,7 @@ namespace MedImgDBMS.Controllers
         }
 
         // GET: Admin/Edit/5
-        public ActionResult Edit(long? id)
+        public ActionResult Edit(long? id, int? page, string sortOrder, string currentFilter, string preColumn)
         {
             if (id == null)
             {
@@ -287,12 +287,42 @@ namespace MedImgDBMS.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ImgStatus = new SelectList(db.imagestatus, "ImgStatID", "ImgStatusName", image.ImgStatus);
-            ViewBag.ImgPatID = new SelectList(db.patients, "PatID", "PatLName", image.ImgPatID);
-            ViewBag.RepStatus = new SelectList(db.reportstatus, "RepStatID", "RepStatusName", image.RepStatus);
-            ViewBag.ImgCreator = new SelectList(db.users, "UserID", "UserLName", image.ImgCreator);
-            ViewBag.ImgDocID = new SelectList(db.users, "UserID", "UserLName", image.ImgDocID);
-            ViewBag.ImgExpID = new SelectList(db.users, "UserID", "UserLName", image.ImgExpID);
+
+            var Patient = db.patients.Select(p => new SelectListItem                                // Create patient selection list
+            {
+                Text = p.PatFName + " " + p.PatLName,
+                Value = p.PatID.ToString()
+            });
+            var Creator = db.users.Where(p => p.UserRoleID == 1).Select(p => new SelectListItem     // Create image creator selection list
+            {
+                Text = p.UserFName + " " + p.UserLName,
+                Value = p.UserID.ToString()
+            });
+            var DocUser = db.users.Where(p => p.UserRoleID == 2).Select(p => new SelectListItem     // Create doctor selection list
+            {
+                Text = p.UserFName + " " + p.UserLName,
+                Value = p.UserID.ToString()
+            });
+            var ExpUser = db.users.Where(p => p.UserRoleID == 3).Select(p => new SelectListItem     // Create expert selection list
+            {
+                Text = p.UserFName + " " + p.UserLName,
+                Value = p.UserID.ToString()
+            });
+
+            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
+            string img_link = "http://" + server + "/" + image.ImgPath;   // Concatenate image URL
+
+            ViewBag.link = img_link;        // Create viewbag variable for image URL
+            ViewBag.Page = page;            // Create viewbag variable for current page
+            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
+            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text", image.ImgPatID);       // Pass the patient selection list with default value
+            ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text", image.ImgDocID);       // Pass the doctor selection list with default value
+            ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text", image.ImgExpID);       // Pass the expert selection list with default value
+            ViewBag.ImgCreator = new SelectList(Creator.OrderBy(p => p.Text), "Value", "Text", image.ImgCreator);   // Pass the creator selection list with default value
+            ViewBag.ImgStatus = new SelectList(db.imagestatus, "ImgStatID", "ImgStatusName", image.ImgStatus);      // Pass image status selection list with default value
+
             return View(image);
         }
 
@@ -301,20 +331,55 @@ namespace MedImgDBMS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ImgID,ImgPath,ImgName,ImgCreateTime,ImgCreator,ImgExpID,ImgDocID,ImgPatID,ImgStatus,RepStatus")] image image)
+        public ActionResult Edit(string rm, string page, string sortOrder, string currentFilter, string preColumn, [Bind(Include = "ImgID,ImgPath,ImgName,ImgCreateTime,ImgCreator,ImgExpID,ImgDocID,ImgPatID,ImgStatus,RepStatus")] image image)
         {
-            if (ModelState.IsValid)
+            int intPage = Convert.ToInt32(page);    // Convert page to integer
+            if (rm == null)                         // If user selected save
             {
-                db.Entry(image).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(image).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index", new { sucMsg = image.ImgName + " modified", page = intPage, sortOrder = sortOrder, currentFilter = currentFilter, preColumn = preColumn });    // Go back to list and display successful message
+                }
             }
-            ViewBag.ImgStatus = new SelectList(db.imagestatus, "ImgStatID", "ImgStatusName", image.ImgStatus);
-            ViewBag.ImgPatID = new SelectList(db.patients, "PatID", "PatLName", image.ImgPatID);
-            ViewBag.RepStatus = new SelectList(db.reportstatus, "RepStatID", "RepStatusName", image.RepStatus);
-            ViewBag.ImgCreator = new SelectList(db.users, "UserID", "UserLName", image.ImgCreator);
-            ViewBag.ImgDocID = new SelectList(db.users, "UserID", "UserLName", image.ImgDocID);
-            ViewBag.ImgExpID = new SelectList(db.users, "UserID", "UserLName", image.ImgExpID);
+
+            // If user selected change image
+            var Patient = db.patients.Select(p => new SelectListItem                                // Create patient selection list
+            {
+                Text = p.PatFName + " " + p.PatLName,
+                Value = p.PatID.ToString()
+            });
+            var Creator = db.users.Where(p => p.UserRoleID == 1).Select(p => new SelectListItem     // Create image creator selection list
+            {
+                Text = p.UserFName + " " + p.UserLName,
+                Value = p.UserID.ToString()
+            });
+            var DocUser = db.users.Where(p => p.UserRoleID == 2).Select(p => new SelectListItem     // Create doctor selection list
+            {
+                Text = p.UserFName + " " + p.UserLName,
+                Value = p.UserID.ToString()
+            });
+            var ExpUser = db.users.Where(p => p.UserRoleID == 3).Select(p => new SelectListItem     // Create expert selection list
+            {
+                Text = p.UserFName + " " + p.UserLName,
+                Value = p.UserID.ToString()
+            });
+
+            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
+            string img_link = "http://" + server + "/" + image.ImgPath;   // Concatenate image URL
+
+            ViewBag.link = img_link;        // Create viewbag variable for image URL
+            ViewBag.Page = page;            // Create viewbag variable for current page
+            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
+            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text", image.ImgPatID);       // Pass the patient selection list with default value
+            ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text", image.ImgDocID);       // Pass the doctor selection list with default value
+            ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text", image.ImgExpID);       // Pass the expert selection list with default value
+            ViewBag.ImgCreator = new SelectList(Creator.OrderBy(p => p.Text), "Value", "Text", image.ImgCreator);   // Pass the creator selection list with default value
+            ViewBag.ImgStatus = new SelectList(db.imagestatus, "ImgStatID", "ImgStatusName", image.ImgStatus);      // Pass image status selection list with default value
+
             return View(image);
         }
 
