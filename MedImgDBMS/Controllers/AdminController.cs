@@ -35,7 +35,7 @@ namespace MedImgDBMS.Controllers
                            select i.imagestatu.ImgStatusName).Distinct();    // Get distinct image status that a user has
             statLst.AddRange(statQry);      // Add distinct image status to the list
 
-            ViewBag.StatList = new SelectList(statLst);                             // Set image status dropdown list in viewbag
+            ViewBag.StatList = new SelectList(statLst, currentFilter);              // Set image status dropdown list in viewbag
             ViewBag.SearchCol = new SelectList(searchCol, "Value", "Text");         // Set search column dropdown list in viewbag
             ViewBag.PreColumn = String.IsNullOrEmpty(preColumn) ? "1" : preColumn;  // Set previously searched column in viewbag, default at 1
             ViewBag.SuccessMsg = sucMsg;            // Get successful message

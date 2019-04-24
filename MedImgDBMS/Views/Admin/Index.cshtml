@@ -18,7 +18,7 @@
         //    $('#statusString').hide();
         //})
         function ShowHide() {
-            if ($('#column').val() == "3") {
+            if ($('#preColumn').val() == "3") {
                 $('#statusString').show(); // show text area
                 $('#searchString').hide(); // show text area
                 $('#searchString').val(null);
@@ -40,7 +40,6 @@
 
 
 <h2>Medical Image List</h2>
-<hr />
 <button class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Admin")'">Create New</button>
 <hr />
 @using (Html.BeginForm("Index", "Admin", FormMethod.Get))
