@@ -5,11 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Delete</h2>
+<h2>Image Deletion</h2>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>image</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -53,44 +52,50 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.reportstatu.RepStatusName)
+            @Html.DisplayNameFor(model => model.patient.PatFName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.reportstatu.RepStatusName)
+            @Html.DisplayFor(model => model.patient.PatFName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Createuser.UserLName)
+            @Html.DisplayName("Creator Name")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Createuser.UserLName)
+            @Html.DisplayFor(model => model.Createuser.UserFName) @Html.DisplayFor(model => model.Createuser.UserLName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Docuser.UserLName)
+            @Html.DisplayName("Doctor Name")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Docuser.UserLName)
+            @Html.DisplayFor(model => model.Docuser.UserFName) @Html.DisplayFor(model => model.Docuser.UserLName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Expuser.UserLName)
+            @Html.DisplayName("Stomatologist Name")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Expuser.UserLName)
+            @Html.DisplayFor(model => model.Expuser.UserFName) @Html.DisplayFor(model => model.Expuser.UserLName)
         </dd>
-
     </dl>
+    <br />
+    <div>
+        <img src="@ViewBag.link" class= "img-deleteview" />
+    </div>
+    <br />
+    <hr />
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
+        <div style="margin-left: 50px;">
+            <input type="submit" value="Delete" class="btn btn-primary" onclick="return confirm('Are you sure?')" /> |
             @Html.ActionLink("Back to List", "Index")
         </div>
     }

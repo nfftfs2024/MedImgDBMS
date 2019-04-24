@@ -17,7 +17,7 @@ namespace MedImgDBMS.Controllers
         private pjmedimgdbEntities db = new pjmedimgdbEntities();
 
         // GET: DocExp
-        public ActionResult Index(string preColumn, string searchString, string statusString, string sortOrder, string currentFilter, int? page)
+        public ViewResult Index(string preColumn, string searchString, string statusString, string sortOrder, string currentFilter, int? page)
         {
             int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
 
