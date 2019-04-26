@@ -9,6 +9,7 @@
     string sortOrder = ViewBag.Order;
     string currentFilter = ViewBag.Filter;
     string preCol = ViewBag.PreColumn;
+    string path = ViewBag.link;
 }
 
 @section CustomScripts
@@ -38,7 +39,7 @@
     </div>
     <div class="row">
         <div class="col-md-8">
-            <img src=@ViewBag.link class="img-responsive">
+            <img src="@Url.Content(@path)" class="img-responsive">
         </div>
         <div class="col-md-4">
             <h3 style="margin-left: 0; margin-top: 0; margin-bottom: 5px;"><b><u>Patient</u></b></h3>

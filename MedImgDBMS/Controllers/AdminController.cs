@@ -180,8 +180,9 @@ namespace MedImgDBMS.Controllers
                 Comment = cmt
             };
 
-            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
-            string img_link = "http://" + server + "/" + img.ImgPath;   // Concatenate image URL
+            //string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
+            //string img_link = "http://" + server + "/" + img.ImgPath;   // Concatenate image URL
+            string img_link = "~/" + img.ImgPath;
 
             ViewBag.link = img_link;        // Create viewbag variable for image URL
             ViewBag.Page = page;            // Create viewbag variable for current page
@@ -309,8 +310,9 @@ namespace MedImgDBMS.Controllers
                 Value = p.UserID.ToString()
             });
 
-            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
-            string img_link = "http://" + server + "/" + image.ImgPath;   // Concatenate image URL
+            //string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
+            //string img_link = "http://" + server + "/" + image.ImgPath;   // Concatenate image URL
+            string img_link = "~/" + image.ImgPath;
 
             ViewBag.link = img_link;        // Create viewbag variable for image URL
             ViewBag.Page = page;            // Create viewbag variable for current page
@@ -388,8 +390,10 @@ namespace MedImgDBMS.Controllers
             }
             image image = db.images.Find(id);
 
-            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
-            string img_link = "http://" + server + "/" + image.ImgPath;   // Concatenate image URL
+            //string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
+            //string img_link = "http://" + server + "/" + image.ImgPath;   // Concatenate image URL
+            string img_link = "~/" + image.ImgPath;
+
             ViewBag.link = img_link;        // Create viewbag variable for image URL
 
             if (image == null)

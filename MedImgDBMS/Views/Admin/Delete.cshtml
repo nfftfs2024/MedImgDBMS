@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string path = ViewBag.link;
 }
 
 <h2>Image Deletion</h2>
@@ -85,7 +86,7 @@
     </dl>
     <br />
     <div>
-        <img src="@ViewBag.link" class= "img-deleteview" />
+        <img src="@Url.Content(@path)" class= "img-deleteview" />
     </div>
     <br />
     <hr />

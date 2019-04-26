@@ -36,7 +36,20 @@ namespace MedImgDBMS.Controllers
                             obj = db.accounts.Where(a => a.AcctLName.Equals(objUser.AcctLName) && a.AcctPasswd.Equals(objUser.AcctPasswd)).FirstOrDefault();    // Compare account name and passwd with DB
                             if (obj != null)
                             {
-                                FormsAuthentication.SetAuthCookie(obj.AcctLName, true);     // Set authentication cookie with account name
+                                //FormsAuthentication.SetAuthCookie(obj.AcctLName, true);     // Set authentication cookie with account name
+                                var now = DateTime.Now;
+                                string roles = obj.user.role.RoleName.ToString();
+                                var ticket = new FormsAuthenticationTicket(
+                                    version: 1,
+                                    name: objUser.AcctID.ToString(),
+                                    issueDate: now,
+                                    expiration: now.AddMinutes(30),
+                                    isPersistent: true,
+                                    userData: roles,
+                                    cookiePath: FormsAuthentication.FormsCookiePath);
+                                var encryptedticket = FormsAuthentication.Encrypt(ticket);
+                                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedticket);
+                                Response.Cookies.Add(cookie);
                                 Session["UserID"] = obj.AcctID.ToString();          // Get session user id
                                 Session["AcctName"] = obj.AcctLName.ToString();     // Get session account name
 

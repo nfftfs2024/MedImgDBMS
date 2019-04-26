@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Administrator Image View";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string path = ViewBag.link;
 }
 
 <div class="container">
@@ -24,7 +25,7 @@
     </div>
     <div class="row">
         <div class="col-md-8">
-            <img src="@ViewBag.link" class="img-responsive" />
+            <img src="@Url.Content(@path)" alt="IMAGES" class="img-responsive" />
         </div>
         <div class="col-md-4">
             <h3 style="margin-left: 0; margin-top: 0; margin-bottom: 5px;"><b><u>Patient</u></b></h3>

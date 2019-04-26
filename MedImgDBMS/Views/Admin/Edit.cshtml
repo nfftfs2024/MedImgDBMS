@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    string link = ViewBag.link;
+    string path = ViewBag.link;
     int pageint = ViewBag.Page;
     string page = pageint.ToString();
     string sortOrder = ViewBag.Order;
@@ -94,7 +94,7 @@
             <br />
             <br />
             <div>
-                <img src="@link" class="img-deleteview" style="margin-left: 100px" />
+                <img src="@Url.Content(@path)" class="img-deleteview" style="margin-left: 100px" />
                 <button class="btn btn-default" type="submit" name="rm" id="rm" value="change">Change Image</button>
             </div>
         }

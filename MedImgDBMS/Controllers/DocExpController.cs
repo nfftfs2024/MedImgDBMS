@@ -143,8 +143,9 @@ namespace MedImgDBMS.Controllers
                 Comment = cmt
             };
 
-            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
-            string img_link = "http://" + server + "/" + img.ImgPath;   // Concatenate image URL
+            //string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
+            //string img_link = "http://" + server + "/" + img.ImgPath;   // Concatenate image URL
+            string img_link = "~/" + img.ImgPath;
 
             ViewBag.link = img_link;        // Create viewbag variable for image URL
             ViewBag.Page = page;            // Create viewbag variable for current page
@@ -240,8 +241,9 @@ namespace MedImgDBMS.Controllers
                 Report = rep
             };
 
-            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
-            string img_link = "http://" + server + "/" + img.ImgPath;    // Concatenate image URL
+            //string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
+            //string img_link = "http://" + server + "/" + img.ImgPath;    // Concatenate image URL
+            string img_link = "~/" + img.ImgPath;
 
             ViewBag.link = img_link;        // Create viewbag variable for image URL
             ViewBag.Page = page;            // Create viewbag variable for current page
