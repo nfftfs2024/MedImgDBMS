@@ -183,7 +183,10 @@ namespace MedImgDBMS.Controllers
                     cmt.CmtCreator = userID;
                     cmt.ImgID = id;                                     // Set comment columns
 
-                    img.ImgStatus = img.ImgStatus + 1;                  // Change image status to comment uploaded
+                    if (submit == "save")
+                        img.ImgStatus = img.ImgStatus + 1;                  // Change image status to comment uploaded
+                    else
+                        img.ImgStatus = img.ImgStatus + 2;                  // Change image status to closed
 
                     if (ModelState.IsValid)
                     {
@@ -281,7 +284,10 @@ namespace MedImgDBMS.Controllers
                     rep.RepCreator = userID;
                     rep.ImgID = id;                                     // Set report columns
 
-                    img.ImgStatus = img.ImgStatus + 1;                  // Change image status to report drafted
+                    if (submit == "save")
+                        img.ImgStatus = img.ImgStatus + 1;                  // Change image status to report drafted
+                    else
+                        img.ImgStatus = img.ImgStatus + 2;                  // Change image status to report finalised
 
                     if (ModelState.IsValid)
                     {
