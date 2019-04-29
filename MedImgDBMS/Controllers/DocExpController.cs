@@ -40,9 +40,9 @@ namespace MedImgDBMS.Controllers
             ViewBag.SearchCol = new SelectList(searchCol, "Value", "Text");         // Set search column dropdown list in viewbag
             ViewBag.PreColumn = String.IsNullOrEmpty(preColumn) ? "1" : preColumn;  // Set previously searched column in viewbag, default at 1
             ViewBag.CurrentSort = sortOrder;        // Get current sorting
-            ViewBag.PatLSortParm = String.IsNullOrEmpty(sortOrder) ? "patient_last_desc" : "";              // Sort by patient last name
+            ViewBag.TimeSortParm = String.IsNullOrEmpty(sortOrder) ? "create_time" : "";              // Sort by image create time
             ViewBag.PatFSortParm = sortOrder == "patient_first" ? "patient_first_desc" : "patient_first";   // Sort by patient first name
-            ViewBag.TimeSortParm = sortOrder == "create_time" ? "create_time_desc" : "create_time";         // Sort by image create time
+            ViewBag.PatLSortParm = sortOrder == "patient_last" ? "patient_last_desc" : "patient_last_time"; // Sort by patient last name
             ViewBag.StatSortParm = sortOrder == "img_status" ? "img_status_desc" : "img_status";            // Sort by image status
             ViewBag.userName = (from usr in db.users
                                 where (usr.UserID == userID)
@@ -87,6 +87,9 @@ namespace MedImgDBMS.Controllers
 
             switch (sortOrder)      // Check sorting case
             {
+                case "patient_last":        // By patient last name ascending
+                    images = images.OrderBy(s => s.patient.PatLName);
+                    break;
                 case "patient_last_desc":   // By patient last name descending
                     images = images.OrderByDescending(s => s.patient.PatLName);
                     break;
@@ -99,17 +102,14 @@ namespace MedImgDBMS.Controllers
                 case "create_time":         // By image create time ascending
                     images = images.OrderBy(s => s.ImgCreateTime);
                     break;
-                case "create_time_desc":    // By image create time descending
-                    images = images.OrderByDescending(s => s.ImgCreateTime);
-                    break;
                 case "img_status":          // By image status ascending
                     images = images.OrderBy(s => s.ImgStatus);
                     break;
                 case "img_status_desc":     // By image status descending
                     images = images.OrderByDescending(s => s.ImgStatus);
                     break;
-                default:                    // Default sorting by patient last name ascending
-                    images = images.OrderBy(s => s.patient.PatLName);
+                default:                    // Default sorting by image create time descending
+                    images = images.OrderByDescending(s => s.ImgCreateTime);
                     break;
             }
 
