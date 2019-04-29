@@ -3,46 +3,60 @@
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string path = ViewBag.link;
+    int pageint = ViewBag.Page;
+    string page = pageint.ToString();
+    string sortOrder = ViewBag.Order;
+    string currentFilter = ViewBag.Filter;
+    string preCol = ViewBag.PreColumn;
 }
 
-<h2>Edit</h2>
+<h2>Edit Image</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
+    if (page != null)
+    {
+        @Html.Hidden("page", page)
+    }
+    if (sortOrder != null)
+    {
+        @Html.Hidden("sortOrder", sortOrder)
+    }
+    if (currentFilter != null)
+    {
+        @Html.Hidden("currentFilter", currentFilter)
+    }
+    if (preCol != null)
+    {
+        @Html.Hidden("preColumn", preCol)
+    }
+
     <div class="form-horizontal">
-        <h4>image</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ImgID)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ImgPath, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ImgPath, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ImgPath, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        @Html.HiddenFor(model => model.ImgPath)
+        @Html.HiddenFor(model => model.ImgName)
 
         <div class="form-group">
             @Html.LabelFor(model => model.ImgName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ImgName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ImgName, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.ImgName, new { htmlAttributes = new { @class = "form-control" } })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ImgCreateTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ImgPatID, "Patient", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ImgCreateTime, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ImgCreateTime, "", new { @class = "text-danger" })
+                @Html.DropDownList("ImgPatID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ImgPatID, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
-            @Html.LabelFor(model => model.ImgCreator, "ImgCreator", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ImgCreator, "Image Creator", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("ImgCreator", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ImgCreator, "", new { @class = "text-danger" })
@@ -50,15 +64,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ImgExpID, "ImgExpID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("ImgExpID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ImgExpID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ImgDocID, "ImgDocID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ImgDocID, "Doctor", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("ImgDocID", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ImgDocID, "", new { @class = "text-danger" })
@@ -66,37 +72,49 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ImgPatID, "ImgPatID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ImgExpID, "Stomatologist", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("ImgPatID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ImgPatID, "", new { @class = "text-danger" })
+                @Html.DropDownList("ImgExpID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ImgExpID, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ImgStatus, "ImgStatus", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ImgStatus, "Image Status", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("ImgStatus", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ImgStatus, "", new { @class = "text-danger" })
             </div>
         </div>
+        <br />
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.RepStatus, "RepStatus", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("RepStatus", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.RepStatus, "", new { @class = "text-danger" })
+        @if (link != null)
+        {
+            <label class="control-label col-md-2">Current Image</label>
+            <br />
+            <br />
+            <div>
+                <img src="@Url.Content(@path)" class="img-deleteview" style="margin-left: 100px" />
+                <button class="btn btn-default" type="submit" name="rm" id="rm" value="change">Change Image</button>
             </div>
-        </div>
+        }
+        else
+        {
+            <div>
+                <label class="control-label col-md-2">Image Upload</label>
+                <div class="col-md-10">
+                    <input type="file" name="imageFile" required />
+                </div>
+            </div>
+        }
+        <br />
+        <br />
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('Are you sure to change the details?')" />
+                <button class="btn btn-primary-cancel" type="button" onclick="location.href='@Url.Action("Index", "Admin", new {page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = ViewBag.PreColumn})'">Cancel</button>
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

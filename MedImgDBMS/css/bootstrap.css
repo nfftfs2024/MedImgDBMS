@@ -182,9 +182,14 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-td,
+td {
+    font-size: 16px;
+    text-align: center;
+}
 th {
-  padding: 0;
+    padding: 0;
+    text-align: center;
+    font-size: 18px;
 }
 @media print {
   * {
@@ -616,7 +621,7 @@ dd {
 @media (min-width: 768px) {
   .dl-horizontal dt {
     float: left;
-    width: 160px;
+    width: 180px;
     clear: left;
     text-align: right;
     overflow: hidden;
@@ -624,11 +629,11 @@ dd {
     white-space: nowrap;
   }
   .dl-horizontal dd {
-    margin-left: 180px;
+    margin-left: 200px;
   }
   .dl-horizontal-view dt {
     float: left;
-    width: 100px;
+    width: 120px;
     overflow: hidden;
     clear: left;
     text-align: right;
@@ -636,7 +641,7 @@ dd {
     white-space: nowrap;
   }
   .dl-horizontal-view dd {
-    margin-left: 120px;
+    margin-left: 140px;
   }
 }
 abbr[title],
@@ -751,6 +756,12 @@ pre code {
 .pre-scrollable {
   max-height: 340px;
   overflow-y: scroll;
+}
+.container-list {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 100px;
+    padding-right: 100px;
 }
 .container {
   margin-right: auto;
@@ -1424,7 +1435,6 @@ table {
   background-color: transparent;
 }
 th {
-  text-align: left;
 }
 .table {
   width: 100%;
@@ -1438,11 +1448,11 @@ th {
 .table > tfoot > tr > td {
   padding: 8px;
   line-height: 1.42857143;
-  vertical-align: top;
+  vertical-align: middle;
   border-top: 1px solid #dddddd;
 }
 .table > thead > tr > th {
-  vertical-align: bottom;
+  vertical-align: middle;
   border-bottom: 2px solid #dddddd;
 }
 .table > caption + thead > tr:first-child > th,
@@ -1710,7 +1720,7 @@ output {
 
 .form-control {
   display: block;
-  width: 100%;
+  width: 20%;
   height: 35px;
   padding: 6px 12px;
   font-size: 15px;
@@ -6132,4 +6142,15 @@ label,
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.img-deleteview {
+    margin-left: 50px;
+    width: 30%;
+    height: 30%;
+}
+
+.pat-name {
+    margin-top: 5px;
+    font-size: 25px;
 }

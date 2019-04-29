@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using MedImgDBMS.Models;
 using MedImgDBMS.ViewModels;
+using PagedList;
 
 namespace MedImgDBMS.Controllers
 {
@@ -16,36 +17,56 @@ namespace MedImgDBMS.Controllers
         private pjmedimgdbEntities db = new pjmedimgdbEntities();
 
         // GET: DocExp
-        public ActionResult Index(string preColumn, string searchString, string statusString)
+        public ViewResult Index(string preColumn, string searchString, string statusString, string sortOrder, string currentFilter, int? page)
         {
             int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
 
-            List<SelectListItem> SearchCol = new List<SelectListItem>()     // Set columns that can be searched by
+            List<SelectListItem> searchCol = new List<SelectListItem>()     // Set columns that can be searched by
             {
                new SelectListItem{Text="Image Name", Value = "1"},
                new SelectListItem{Text="Patient Name", Value = "2"},
                new SelectListItem{Text="Image Status", Value = "3"}
             };
 
-            var StatLst = new List<string>();                   // Create a new list for image status
-            var StatQry = (from i in db.images
+            var statLst = new List<string>();   // Create a new list for image status
+            statLst.Add("All");                 // Add all for status selection
+            var statQry = (from i in db.images
                            where (i.ImgDocID == userID || i.ImgExpID == userID)
                            orderby i.imagestatu.ImgStatusName
                            select i.imagestatu.ImgStatusName).Distinct();    // Get distinct image status that a user has
-            StatLst.AddRange(StatQry);      // Add distinct image status to the list
+            statLst.AddRange(statQry);      // Add distinct image status to the list
 
-            ViewBag.statList = new SelectList(StatLst);                         // Set image status dropdown list in viewbag
-            ViewBag.searchCol = new SelectList(SearchCol, "Value", "Text");     // Set search column dropdown list in viewbag
-            ViewBag.precolumn = "1";                                            // Set previously searched column in viewbag, default at 1
+            ViewBag.StatList = new SelectList(statLst, currentFilter);              // Set image status dropdown list in viewbag
+            ViewBag.SearchCol = new SelectList(searchCol, "Value", "Text");         // Set search column dropdown list in viewbag
+            ViewBag.PreColumn = String.IsNullOrEmpty(preColumn) ? "1" : preColumn;  // Set previously searched column in viewbag, default at 1
+            ViewBag.CurrentSort = sortOrder;        // Get current sorting
+            ViewBag.PatLSortParm = String.IsNullOrEmpty(sortOrder) ? "patient_last_desc" : "";              // Sort by patient last name
+            ViewBag.PatFSortParm = sortOrder == "patient_first" ? "patient_first_desc" : "patient_first";   // Sort by patient first name
+            ViewBag.TimeSortParm = sortOrder == "create_time" ? "create_time_desc" : "create_time";         // Sort by image create time
+            ViewBag.StatSortParm = sortOrder == "img_status" ? "img_status_desc" : "img_status";            // Sort by image status
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
             if (preColumn == "3")
-                ViewBag.preColumn = "3";    // When last search was using the image status column
+                searchString = statusString;    // When last search was using the image status column, put status string into search string
+
+            if (searchString != null)
+                page = 1;                       // Conditions when users change sorting or filtering
+            else
+                searchString = currentFilter;   // Conditions to keep filtering string when user switches pages
+
+            ViewBag.CurrentFilter = searchString;   // Pass current filtering string
+            ViewBag.Page = (page ?? 1);                    // Pass page
+
+            if (preColumn == "3" && searchString == "All")      // Convert filtering string to null when filtering with "All" for image status
+                searchString = "";
 
             var images = from img in db.images  
                          where (img.ImgDocID == userID || img.ImgExpID == userID)
                          select img;                                                            // LINQ to select only user viewable images
 
-            if (!String.IsNullOrEmpty(searchString) || !String.IsNullOrEmpty(statusString))     // Check if either text area or status dropdown list are both empty         
+            if (!String.IsNullOrEmpty(searchString))     // Check if search string is both empty         
             {
                 int col = int.Parse(preColumn);         // Get selected search column                                                
                 switch (col)
@@ -57,28 +78,55 @@ namespace MedImgDBMS.Controllers
                         images = images.Where(s => s.patient.PatLName.Contains(searchString) || s.patient.PatFName.Contains(searchString));
                         break;
                     case 3:     // When image status is selected
-                        images = images.Where(s => s.imagestatu.ImgStatusName == (statusString));
+                        images = images.Where(s => s.imagestatu.ImgStatusName == (searchString));
                         break;
                     default:
                         break;
                 }
             }
 
-            ViewBag.userName = (from usr in db.users
-                                where (usr.UserID == userID)
-                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
+            switch (sortOrder)      // Check sorting case
+            {
+                case "patient_last_desc":   // By patient last name descending
+                    images = images.OrderByDescending(s => s.patient.PatLName);
+                    break;
+                case "patient_first":       // By patient first name ascending
+                    images = images.OrderBy(s => s.patient.PatFName);
+                    break;
+                case "patient_first_desc":  // By patient first name descending
+                    images = images.OrderByDescending(s => s.patient.PatFName);
+                    break;
+                case "create_time":         // By image create time ascending
+                    images = images.OrderBy(s => s.ImgCreateTime);
+                    break;
+                case "create_time_desc":    // By image create time descending
+                    images = images.OrderByDescending(s => s.ImgCreateTime);
+                    break;
+                case "img_status":          // By image status ascending
+                    images = images.OrderBy(s => s.ImgStatus);
+                    break;
+                case "img_status_desc":     // By image status descending
+                    images = images.OrderByDescending(s => s.ImgStatus);
+                    break;
+                default:                    // Default sorting by patient last name ascending
+                    images = images.OrderBy(s => s.patient.PatLName);
+                    break;
+            }
 
             if (images == null)                 // Condition for viewing empty image list
                 return View();
             else                                // Condition for viewing image list
-                return View(images.ToList());
-
+            {
+                int pageSize = 5;
+                int pageNumber = (page ?? 1);
+                return View(images.ToPagedList(pageNumber, pageSize));
+            }
             //DEFAULT
             //var images = db.images.Include(i => i.patient).Include(i => i.imagestatu).Include(i => i.user).Include(i => i.user1).Include(i => i.user2);
         }
 
         // Doctor image view page
-        public ActionResult DocImageView(long? id)
+        public ActionResult DocImageView(long? id, int? page, string sortOrder, string currentFilter, string preColumn, string sucMsg)
         {
             image img = db.images.Find(id);                 // Find images belong to user id in DB
             report rep = (from r in db.reports
@@ -95,20 +143,30 @@ namespace MedImgDBMS.Controllers
                 Comment = cmt
             };
 
-            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
-            string img_link = "http://" + server + "/" + img.ImgPath;   // Concatenate image URL
-            ViewBag.link = img_link;                                      // Create viewbag variable for image URL
+            //string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
+            //string img_link = "http://" + server + "/" + img.ImgPath;   // Concatenate image URL
+            string img_link = "~/" + img.ImgPath;
+
+            ViewBag.link = img_link;        // Create viewbag variable for image URL
+            ViewBag.Page = page;            // Create viewbag variable for current page
+            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
+            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.SuccessMsg = sucMsg;    // Create viewbag variable for comment successful message
             return View(view);
         }
 
         // Post: Doctor image view
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DocImageView(ImgRepCmtViewModels IRCVmodel, int id, string submit)
+        public ActionResult DocImageView(ImgRepCmtViewModels IRCVmodel, int id, string submit, string page, string sortOrder, string currentFilter, string preColumn)
         {
+            int intPage = Convert.ToInt32(page);    // Convert page to integer
+            string message = "";                    // Intialise message 
+
             if (IRCVmodel.Comment.CmtText is null)
             {
-                ViewBag.Message = "Comment text cannot be emtpy";        // When comment text is null..... TODO......
+                message = "Comment text cannot be emtpy";        // When comment text is null
             }
             else
             {
@@ -132,6 +190,7 @@ namespace MedImgDBMS.Controllers
                         db.comments.Add(cmt);
                         db.Entry(img).State = EntityState.Modified;
                         db.SaveChanges();
+                        message = "Comment created";
                     }
                 }
                 else                    // When there is existing comment
@@ -149,6 +208,7 @@ namespace MedImgDBMS.Controllers
                         {
                             db.Entry(cmt).State = EntityState.Modified;
                             db.SaveChanges();
+                            message = "Comment saved";
                         }
                     }
                     else                                                // The image case is closed
@@ -159,15 +219,16 @@ namespace MedImgDBMS.Controllers
                             db.Entry(cmt).State = EntityState.Modified;
                             db.Entry(img).State = EntityState.Modified;
                             db.SaveChanges();
+                            message = "Image case closed";
                         }
                     }
                 }
             }
-            return RedirectToAction("DocImageView", id);    // Reload page
+            return RedirectToAction("DocImageView", new { id, sucMsg = message, page = intPage, sortOrder = sortOrder, currentFilter = currentFilter, preColumn = preColumn });    // Reload page
         }
 
         // Expert image view page
-        public ActionResult ExpImageView(long? id)
+        public ActionResult ExpImageView(long? id, int? page, string sortOrder, string currentFilter, string preColumn, string sucMsg)
         {
             image img = db.images.Find(id);                // Find images belong to user id in DB
             report rep = (from r in db.reports
@@ -180,20 +241,30 @@ namespace MedImgDBMS.Controllers
                 Report = rep
             };
 
-            string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
-            string img_link = "http://" + server + "/" + img.ImgPath;    // Concatenate image URL
-            ViewBag.link = img_link;                                      // Create viewbag variable for image URL
+            //string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
+            //string img_link = "http://" + server + "/" + img.ImgPath;    // Concatenate image URL
+            string img_link = "~/" + img.ImgPath;
+
+            ViewBag.link = img_link;        // Create viewbag variable for image URL
+            ViewBag.Page = page;            // Create viewbag variable for current page
+            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
+            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.SuccessMsg = sucMsg;    // Create viewbag variable for comment successful message
             return View(view);
         }
 
         // Post: Expert image view
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ExpImageView(ImgRepCmtViewModels IRCVmodel, int id, string submit)
+        public ActionResult ExpImageView(ImgRepCmtViewModels IRCVmodel, int id, string submit, string page, string sortOrder, string currentFilter, string preColumn)
         {
+            int intPage = Convert.ToInt32(page);    // Convert page to integer
+            string message = "";                    // Intialise message 
+
             if (IRCVmodel.Report.RepText is null)
             {
-                ViewBag.Message = "Report text cannot be emtpy";        // When report text is null..... TODO......
+                message = "Report text cannot be emtpy";        // When report text is null
             }
             else
             {
@@ -217,6 +288,7 @@ namespace MedImgDBMS.Controllers
                         db.reports.Add(rep);
                         db.Entry(img).State = EntityState.Modified;
                         db.SaveChanges();
+                        message = "Report created";
                     }
                 }
                 else                    // When there is existing report
@@ -234,6 +306,7 @@ namespace MedImgDBMS.Controllers
                         {
                             db.Entry(rep).State = EntityState.Modified;
                             db.SaveChanges();
+                            message = "Report saved";
                         }
                     }
                     else                                                // The report is submitted
@@ -245,12 +318,13 @@ namespace MedImgDBMS.Controllers
                             db.Entry(rep).State = EntityState.Modified;
                             db.Entry(img).State = EntityState.Modified;
                             db.SaveChanges();
+                            message = "Report submitted";
                         }
 
                     }
                 }
             }
-            return RedirectToAction("ExpImageView", id);    // Reload page
+            return RedirectToAction("ExpImageView", new { id, sucMsg = message, page = intPage, sortOrder = sortOrder, currentFilter = currentFilter, preColumn = preColumn });    // Reload page
         }
 
         protected override void Dispose(bool disposing)
