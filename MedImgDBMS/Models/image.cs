@@ -12,6 +12,7 @@ namespace MedImgDBMS.Models
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     
     public partial class image
     {
@@ -32,6 +33,7 @@ namespace MedImgDBMS.Models
         [DisplayName("Image Name")]
         public string ImgName { get; set; }
         [DisplayName("Create Time")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}")]
         public System.DateTime ImgCreateTime { get; set; }
         [DisplayName("Image Creator")]
         public long ImgCreator { get; set; }

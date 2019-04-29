@@ -3,6 +3,23 @@
 @{
     ViewBag.Title = "Doctor Image View";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var message = ViewBag.SuccessMsg;
+    int pageint = ViewBag.Page;
+    string page = pageint.ToString();
+    string sortOrder = ViewBag.Order;
+    string currentFilter = ViewBag.Filter;
+    string preCol = ViewBag.PreColumn;
+    string path = ViewBag.link;
+}
+
+@section CustomScripts
+{
+    <script type="text/javascript">
+    var message = '@message';
+        if (message) {
+            alert(message);
+        }
+    </script>
 }
 
 <div class="container">
@@ -22,12 +39,15 @@
     </div>
     <div class="row">
         <div class="col-md-8">
-            <img src=@ViewBag.link class="img-responsive">
+            <img src="@Url.Content(@path)" class="img-responsive">
         </div>
         <div class="col-md-4">
-            <h3>Patient Name</h3>
-            <p>@Html.DisplayFor(model => model.Image.patient.PatFName) @Html.DisplayFor(model => model.Image.patient.PatLName)</p>
-            <dl class="dl-horizontal">
+            <h3 style="margin-left: 0; margin-top: 0; margin-bottom: 5px;"><b><u>Patient</u></b></h3>
+            <p class="pat-name">@Html.DisplayFor(model => model.Image.patient.PatFName) @Html.DisplayFor(model => model.Image.patient.PatLName)</p>
+            <p><b>@Html.DisplayNameFor(model => model.Image.patient.DOB)</b>&nbsp @Html.DisplayFor(model => model.Image.patient.DOB, "{0:dd/MM/yyyy}")</p>
+            <p><b>@Html.DisplayNameFor(model => model.Image.patient.Gender)</b>&nbsp @Html.DisplayFor(model => model.Image.patient.Gender)</p>
+            <hr />
+            <dl class="dl-horizontal-view">
                 <dt>@Html.DisplayName("Image Status:")</dt>
                 <dd class="clearfix">@Html.DisplayFor(model => model.Image.imagestatu.ImgStatusName)</dd>
 
@@ -56,7 +76,7 @@
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <div class="form-group shadow-textarea">
-                            @Html.TextAreaFor(m => m.Comment.CmtText, new { @class = "form-control z-depth-1", @placeholder = "Write comment here..." })
+                            @Html.TextAreaFor(m => m.Comment.CmtText, new { @class = "form-control-textbox z-depth-1", @placeholder = "Write comment here..." })
                             @Html.ValidationMessageFor(m => m.Comment.CmtText, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group col-lg-12">
@@ -64,21 +84,37 @@
                             <hr />
                             @if (Model.Image.ImgStatus == 4)
                             {
-                                <button class="btn btn-primary" type="submit" name="submit" id="submit" value="close">CLOSE CASE</button>
+                                <button class="btn btn-primary" type="submit" name="submit" id="submit" value="close" onclick="return confirm('Are you sure to close? The comment will not be modified after you close.')">CLOSE CASE</button>
                             }
                         </div>
+                        if (page != null)
+                        {
+                                @Html.Hidden("page", page)
+                        }
+                        if (sortOrder != null)
+                        {
+                                @Html.Hidden("sortOrder", sortOrder)
+                        }
+                        if (currentFilter != null)
+                        {
+                                @Html.Hidden("currentFilter", currentFilter)
+                        }
+                        if (preCol != null)
+                        {
+                                @Html.Hidden("preColumn", preCol)
+                        }
                     }
                 }
                 else
                 {
-                    <div>
-                    <p>@Html.DisplayFor(model => model.Comment.CmtText)</p>
-                    </div>
+                        <div>
+                            <p>@Html.DisplayFor(model => model.Comment.CmtText)</p>
+                        </div>
                 }
             }
+            <p>
+                @Html.ActionLink("Back to List", "Index", new { page = ViewBag.Page, sortOrder = ViewBag.Order, currentFilter = ViewBag.Filter, preColumn = ViewBag.PreColumn })
+            </p>
         </div>
-        <p>
-            @Html.ActionLink("Back to List", "Index")
-        </p>
     </div>
 </div>

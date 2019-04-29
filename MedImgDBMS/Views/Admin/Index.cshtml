@@ -1,82 +1,131 @@
-﻿@model IEnumerable<MedImgDBMS.Models.image>
+﻿@model PagedList.IPagedList<MedImgDBMS.Models.image>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    SelectList searchCol = ViewBag.SearchCol;
+    SelectList statList = ViewBag.StatList;
+    string preCol = ViewBag.PreColumn;
+    var message = ViewBag.SuccessMsg;
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.ImgPath)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ImgName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ImgCreateTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.imagestatu.ImgStatusName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.patient.PatLName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.reportstatu.RepStatusName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Createuser.UserLName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Docuser.UserLName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Expuser.UserLName)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ImgPath)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ImgName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ImgCreateTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.imagestatu.ImgStatusName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.patient.PatLName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.reportstatu.RepStatusName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Createuser.UserLName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Docuser.UserLName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Expuser.UserLName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ImgID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ImgID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ImgID })
-        </td>
-    </tr>
+@section CustomScripts
+{
+    <script type="text/javascript">
+        //$(document).ready(function () {
+        //    $('#statusString').hide();
+        //})
+        function ShowHide() {
+            if ($('#preColumn').val() == "3") {
+                $('#statusString').show(); // show text area
+                $('#searchString').hide(); // show text area
+                $('#searchString').val(null);
+            }
+            else {
+                $('#statusString').hide(); // show text area
+                $('#searchString').show(); // show text area
+                $('#statusString').val('All'); // show text area
+            }
+        }
+    </script>
+    <script type="text/javascript">
+    var message = '@message';
+        if (message) {
+            alert(message);
+        }
+    </script>
 }
 
-</table>
+<h2>Medical Image List</h2>
+<button style="margin-left:50px" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Admin")'">Create New</button>
+<div class="container-list">
+    <hr />
+    @using (Html.BeginForm("Index", "Admin", FormMethod.Get))
+    {
+        <p>
+            @Html.DropDownList("preColumn", searchCol, new { onchange = "ShowHide()" })
+            @if (preCol == "3")
+            {
+                @Html.DropDownList("statusString", statList)
+                @Html.TextBox("searchString", "", new { style = "display:none;" })
+            }
+            else
+            {
+                @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+                @Html.DropDownList("statusString", statList, new { style = "display:none;" })
+            }
+            <input type="submit" value="Search" />
+        </p>
+    }
+
+    <table class="table">
+        <tr>
+            <th style="width: 10%">
+                @Html.ActionLink("Image Name", "Index", new { sortOrder = ViewBag.ImgNameSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Patient FirstName", "Index", new { sortOrder = ViewBag.PatFSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Patient LastName", "Index", new { sortOrder = ViewBag.PatLSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 12%">
+                @Html.ActionLink("Create Time", "Index", new { sortOrder = ViewBag.TimeSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Image Status", "Index", new { sortOrder = ViewBag.StatSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Creator Name", "Index", new { sortOrder = ViewBag.CreatorSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Doctor Name", "Index", new { sortOrder = ViewBag.DocSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 10%">
+                @Html.ActionLink("Stomatologist Name", "Index", new { sortOrder = ViewBag.ExpSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 16%"></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 10%">
+                    @Html.ActionLink(@Html.DisplayFor(modelItem => item.ImgName).ToString(), "ImageView", new { id = item.ImgID, page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.patient.PatFName)
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.patient.PatLName)
+                </td>
+                <td style="width: 12%">
+                    @Html.DisplayFor(modelItem => item.ImgCreateTime, "{0:dd/MM/yyyy HH:mm:ss}")
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.imagestatu.ImgStatusName)
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.Createuser.UserFName) @Html.DisplayFor(modelItem => item.Createuser.UserLName)
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.Docuser.UserFName) @Html.DisplayFor(modelItem => item.Docuser.UserLName)
+                </td>
+                <td style="width: 10%">
+                    @Html.DisplayFor(modelItem => item.Expuser.UserFName) @Html.DisplayFor(modelItem => item.Expuser.UserLName)
+                </td>
+                <td style="width: 16%">
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Admin", new { id = item.ImgID, page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })'">Edit</button>
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Delete", "Admin", new { id = item.ImgID })'">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+                     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol }))
+</div>
