@@ -61,9 +61,9 @@ namespace MedImgDBMS.Controllers
                                     case "1":
                                         return RedirectToAction("Index", "Admin");
                                     case "2":
-                                        return RedirectToAction("Index", "DocExp");
+                                        return RedirectToAction("Index", "DocExp", new { preColumn = "3", statusString = "New" });
                                     case "3":
-                                        return RedirectToAction("Index", "DocExp");
+                                        return RedirectToAction("Index", "DocExp", new { preColumn = "3", statusString = "New" });
                                 }
                             }
                             else
