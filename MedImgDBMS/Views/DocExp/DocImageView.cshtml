@@ -82,10 +82,7 @@
                         <div class="form-group col-lg-12">
                             <button class="btn btn-primary" type="submit" name="submit" id="save" value="save">SAVE</button>
                             <hr />
-                            @if (Model.Image.ImgStatus == 4)
-                            {
-                                <button class="btn btn-primary" type="submit" name="submit" id="submit" value="close" onclick="return confirm('Are you sure to close? The comment will not be modified after you close.')">CLOSE CASE</button>
-                            }
+                            <button class="btn btn-primary" type="submit" name="submit" id="submit" value="close" onclick="return confirm('Are you sure to close? The comment will not be modified after you close.')">CLOSE CASE</button>
                         </div>
                         if (page != null)
                         {

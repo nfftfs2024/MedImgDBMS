@@ -90,10 +90,7 @@
                     }
                     <div class="form-group col-lg-12">
                         <button class="btn btn-primary" type="submit" name="submit" id="save" value="save">SAVE</button>
-                        @if (Model.Image.ImgStatus == 2)
-                        {
-                            <button class="btn btn-primary" type="submit" name="submit" id="submit" value="submit" onclick="return confirm('Are you sure to submit? The report text cannot be modified after you submit.')">SUBMIT</button>
-                        }
+                        <button class="btn btn-primary" type="submit" name="submit" id="submit" value="submit" onclick="return confirm('Are you sure to submit? The report text cannot be modified after you submit.')">SUBMIT</button>
                     </div>
                 }
             }
