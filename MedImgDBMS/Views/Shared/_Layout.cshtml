@@ -14,9 +14,12 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     @RenderSection("CustomScripts", required: false)
+
 </head>
 <body>
-
+    @{ 
+        int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");
+    }
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div>
             <div class="navbar-header">
@@ -32,13 +35,21 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    @if (userID == 1)
+                    {
+                        <li id="image">
+                            @Html.ActionLink("Image Management", "Index", "Admin")
+                        </li>
+                        <li id="user">
+                            @Html.ActionLink("User Management", "")
+                        </li>
+                        <li id="patient">
+                            @Html.ActionLink("Patient Management", "")
+                        </li>
+                    }
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li id="about">
-                    </li>
-                    <li id="services">
-                    </li>
-                    <li id="contact">
-                    </li>
                     <li>
                         <a href="" style="font-size:18px; padding:12px; color:white;">Hi! @ViewBag.userName</a>
                     </li>

@@ -155,6 +155,8 @@ namespace MedImgDBMS.Controllers
         // GET: Admin image view
         public ActionResult ImageView(long? id, int? page, string sortOrder, string currentFilter, string preColumn)
         {
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -189,12 +191,17 @@ namespace MedImgDBMS.Controllers
             ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
             ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
             ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
             return View(view);
         }
 
         // GET: Admin/Create
         public ActionResult Create()
         {
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
             var img = from i in db.images
                       select i.ImgID;                                       // Get current image IDs in database
             int imgMax = Convert.ToInt32(img.Max().ToString()) + 1;         // Get the next image ID
@@ -221,6 +228,9 @@ namespace MedImgDBMS.Controllers
             ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text");       // Pass the patient selection list
             ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the doctor selection list
             ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the expert selection list
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
             image image = new image();      // Create a new image object
             return View(image);
@@ -271,6 +281,9 @@ namespace MedImgDBMS.Controllers
             ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text");       // Pass the patient selection list
             ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the doctor selection list
             ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the expert selection list
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
             image image = new image();      // Create a new image object
             return View(image);
@@ -279,6 +292,8 @@ namespace MedImgDBMS.Controllers
         // GET: Admin/Edit/5
         public ActionResult Edit(long? id, int? page, string sortOrder, string currentFilter, string preColumn)
         {
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -324,6 +339,9 @@ namespace MedImgDBMS.Controllers
             ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text", image.ImgExpID);       // Pass the expert selection list with default value
             ViewBag.ImgCreator = new SelectList(Creator.OrderBy(p => p.Text), "Value", "Text", image.ImgCreator);   // Pass the creator selection list with default value
             ViewBag.ImgStatus = new SelectList(db.imagestatus, "ImgStatID", "ImgStatusName", image.ImgStatus);      // Pass image status selection list with default value
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
             return View(image);
         }
@@ -384,6 +402,8 @@ namespace MedImgDBMS.Controllers
         // GET: Admin/Delete/5
         public ActionResult Delete(long? id)
         {
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -395,6 +415,9 @@ namespace MedImgDBMS.Controllers
             string img_link = "~/" + image.ImgPath;
 
             ViewBag.link = img_link;        // Create viewbag variable for image URL
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
             if (image == null)
             {
