@@ -1,18 +1,40 @@
 ﻿@model MedImgDBMS.Models.patient
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Patient";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    int pageint = ViewBag.Page;
+    string page = pageint.ToString();
+    string sortOrder = ViewBag.CurrentSort;
+    string currentFilter = ViewBag.CurrentFilter;
+    string preCol = ViewBag.PreColumn;
+    SelectList gender = ViewBag.Gen;
 }
 
-<h2>Edit</h2>
+<h2>Edit Patient</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
+    if (page != null)
+    {
+        @Html.Hidden("page", page)
+    }
+    if (sortOrder != null)
+    {
+        @Html.Hidden("sortOrder", sortOrder)
+    }
+    if (currentFilter != null)
+    {
+        @Html.Hidden("currentFilter", currentFilter)
+    }
+    if (preCol != null)
+    {
+        @Html.Hidden("preColumn", preCol)
+    }
+
     <div class="form-horizontal">
-        <h4>patient</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.PatID)
@@ -44,19 +66,17 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Gender, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.Gender, gender, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        <br />
+        <br />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('Are you sure to change the details?')" />
+                <button class="btn btn-primary-cancel" type="button" onclick="location.href='@Url.Action("Index", "AdminPat", new {page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = ViewBag.PreColumn})'">Cancel</button>
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

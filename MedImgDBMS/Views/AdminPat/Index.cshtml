@@ -1,52 +1,94 @@
-﻿@model IEnumerable<MedImgDBMS.Models.patient>
+﻿@model PagedList.IPagedList<MedImgDBMS.Models.patient>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    SelectList searchCol = ViewBag.SearchCol;
+    string preCol = ViewBag.PreColumn;
+    var message = ViewBag.SuccessMsg;
 }
 
-<h2>Index</h2>
+<script type="text/javascript">
+    var message = '@message';
+        if (message) {
+            alert(message);
+        }
+</script>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.PatLName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PatFName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DOB)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Gender)
-        </th>
-        <th></th>
-    </tr>
+<h2>Patient List</h2>
+<button style="margin-left:50px" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "AdminPat")'">Create New</button>
+<div class="container-list">
+    <hr />
+    @using (Html.BeginForm("Index", "AdminPat", FormMethod.Get))
+    {
+        <p>
+            @Html.DropDownList("preColumn", searchCol)
+            @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" />
+        </p>
+    }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.PatLName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PatFName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DOB)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Gender)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PatID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PatID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.PatID })
-        </td>
-    </tr>
-}
+    <table class="table">
+        <tr>
+            <th style="width: 15%">
+                @Html.ActionLink("Patient ID", "Index", new { sortOrder = ViewBag.IDSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.ActionLink("Patient FirstName", "Index", new { sortOrder = ViewBag.PatFSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.ActionLink("Patient LastName", "Index", new { sortOrder = ViewBag.PatLSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.ActionLink("Date of Birth", "Index", new { sortOrder = ViewBag.DOBSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.Label("Gender", new { @style = "font-size: 18px; color: #008cba; font-weight: bold" })
+            </th>
+            <th style="width: 16%"></th>
+        </tr>
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.PatID)
+                </td>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.PatFName)
+                </td>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.PatLName)
+                </td>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.DOB)
+                </td>
+                <td style="width: 15%">
+                    @if (item.Gender != null)
+                    {
+                        if (item.Gender.ToString() == "M")
+                        {
+                            @Html.Label("Male", new { @style = "font-size: 16px" })
+                        }
+                        if (item.Gender.ToString() == "F")
+                        {
+                            @Html.Label("Female", new { @style = "font-size: 16px" })
+                        }
+                    }
+                </td>
+                <td style="width: 16%">
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "AdminPat", new { id = item.PatID, page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })'">Edit</button>
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Delete", "AdminPat", new { id = item.PatID })'">Delete</button>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+                             new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol }))
+</div>

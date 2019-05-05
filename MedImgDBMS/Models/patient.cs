@@ -24,11 +24,13 @@ namespace MedImgDBMS.Models
     
         public long PatID { get; set; }
         [DisplayName("Patient Last Name")]
+        [Required(ErrorMessage = "Please enter last name")]
         public string PatLName { get; set; }
         [DisplayName("Patient First Name")]
+        [Required(ErrorMessage = "Please enter first name")]
         public string PatFName { get; set; }
         [DisplayName("Birthday")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public Nullable<System.DateTime> DOB { get; set; }
         [DisplayName("Gender")]
         public string Gender { get; set; }

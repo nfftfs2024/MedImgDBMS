@@ -1,12 +1,12 @@
 ﻿@model MedImgDBMS.ViewModels.UserAcctEditViewModels
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit User";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int pageint = ViewBag.Page;
     string page = pageint.ToString();
-    string sortOrder = ViewBag.Order;
-    string currentFilter = ViewBag.Filter;
+    string sortOrder = ViewBag.CurrentSort;
+    string currentFilter = ViewBag.CurrentFilter;
     string preCol = ViewBag.PreColumn;
 }
 

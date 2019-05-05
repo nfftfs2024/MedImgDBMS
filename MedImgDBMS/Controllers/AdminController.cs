@@ -186,11 +186,11 @@ namespace MedImgDBMS.Controllers
             //string img_link = "http://" + server + "/" + img.ImgPath;   // Concatenate image URL
             string img_link = "~/" + img.ImgPath;
 
-            ViewBag.link = img_link;        // Create viewbag variable for image URL
-            ViewBag.Page = page;            // Create viewbag variable for current page
-            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
-            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
-            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.link = img_link;                // Create viewbag variable for image URL
+            ViewBag.Page = page;                    // Create viewbag variable for current page
+            ViewBag.CurrentSort = sortOrder;          // Create viewbag variable for current sort
+            ViewBag.CurrentFilter = currentFilter;  // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;          // Create viewbag variable for filtering column
             ViewBag.userName = (from usr in db.users
                                 where (usr.UserID == userID)
                                 select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
@@ -329,11 +329,11 @@ namespace MedImgDBMS.Controllers
             //string img_link = "http://" + server + "/" + image.ImgPath;   // Concatenate image URL
             string img_link = "~/" + image.ImgPath;
 
-            ViewBag.link = img_link;        // Create viewbag variable for image URL
-            ViewBag.Page = page;            // Create viewbag variable for current page
-            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
-            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
-            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.link = img_link;                // Create viewbag variable for image URL
+            ViewBag.Page = page;                    // Create viewbag variable for current page
+            ViewBag.CurrentSort = sortOrder;          // Create viewbag variable for current sort
+            ViewBag.CurrentFilter = currentFilter;  // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;          // Create viewbag variable for filtering column
             ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text", image.ImgPatID);       // Pass the patient selection list with default value
             ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text", image.ImgDocID);       // Pass the doctor selection list with default value
             ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text", image.ImgExpID);       // Pass the expert selection list with default value
@@ -388,10 +388,10 @@ namespace MedImgDBMS.Controllers
 
             int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
 
-            ViewBag.Page = intPage;         // Create viewbag variable for current page
-            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
-            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
-            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.Page = intPage;                 // Create viewbag variable for current page
+            ViewBag.CurrentSort = sortOrder;          // Create viewbag variable for current sort
+            ViewBag.CurrentFilter = currentFilter;  // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;      // Create viewbag variable for filtering column
             ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text", image.ImgPatID);       // Pass the patient selection list with default value
             ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text", image.ImgDocID);       // Pass the doctor selection list with default value
             ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text", image.ImgExpID);       // Pass the expert selection list with default value

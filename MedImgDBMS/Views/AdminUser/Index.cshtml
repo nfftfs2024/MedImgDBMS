@@ -25,7 +25,7 @@
     {
         <p>
             @Html.DropDownList("preColumn", searchCol)
-            @Html.TextBox("searchString", "")
+            @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
             <input type="submit" value="Search" />
         </p>
     }

@@ -17,7 +17,7 @@ namespace MedImgDBMS.Controllers
         private pjmedimgdbEntities db = new pjmedimgdbEntities();
 
         // GET: Admin
-        public ViewResult Index(string preColumn, string searchString, string statusString, string sortOrder, string currentFilter, int? page, string sucMsg)
+        public ViewResult Index(string preColumn, string searchString, string sortOrder, string currentFilter, int? page, string sucMsg)
         {
             int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
 
@@ -105,9 +105,9 @@ namespace MedImgDBMS.Controllers
                     break;
             }
 
-            if (usr == null)                 // Condition for viewing empty image list
+            if (usr == null)                    // Condition for viewing empty user list
                 return View();
-            else                                // Condition for viewing image list
+            else                                // Condition for viewing user list
             {
                 int pageSize = 5;
                 int pageNumber = (page ?? 1);
@@ -213,10 +213,10 @@ namespace MedImgDBMS.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.Page = page;            // Create viewbag variable for current page
-            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
-            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
-            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.Page = page;                        // Create viewbag variable for current page
+            ViewBag.CurrentSort = sortOrder;              // Create viewbag variable for current sort
+            ViewBag.CurrentFilter = currentFilter;      // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;              // Create viewbag variable for filtering column
             ViewBag.UserRoleID = new SelectList(db.roles, "RoleID", "RoleName", usr.UserRoleID);                         // Pass role selection list with default value
             ViewBag.AcctStatus = new SelectList(db.accountstatus, "AcctStatID", "AcctStatusName", acct.AcctStatus);      // Pass account status selection list with default value
             ViewBag.userName = (from u in db.users
@@ -248,10 +248,10 @@ namespace MedImgDBMS.Controllers
 
             int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
 
-            ViewBag.Page = intPage;         // Create viewbag variable for current page
-            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
-            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
-            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.Page = intPage;                 // Create viewbag variable for current page
+            ViewBag.CurrentSort = sortOrder;          // Create viewbag variable for current sort
+            ViewBag.CurrentFilter = currentFilter;  // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;          // Create viewbag variable for filtering column
             ViewBag.UserRoleID = new SelectList(db.roles, "RoleID", "RoleName", uaeModel.User.UserRoleID);                              // Pass role selection list with default value
             ViewBag.AccountStatus = new SelectList(db.accountstatus, "AcctStatID", "AcctStatusName", uaeModel.Account.AcctStatus);      // Pass account status selection list with default value
             ViewBag.userName = (from u in db.users
