@@ -20,11 +20,16 @@ namespace MedImgDBMS.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string AcctPasswd { get; set; }
-
         [Required(ErrorMessage = "Please enter confirm password")]
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("AcctPasswd", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfPasswd { get; set; }
+    }
+
+    public class UserAcctEditViewModels
+    {
+        public user User { get; set; }
+        public account Account { get; set; }
     }
 }

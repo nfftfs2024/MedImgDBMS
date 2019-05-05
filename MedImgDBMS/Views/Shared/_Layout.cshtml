@@ -18,7 +18,7 @@
 </head>
 <body>
     @{ 
-        int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");
+        int roleID = Convert.ToInt32(Session["UserRole"] != null ? Session["UserRole"].ToString() : "0");
     }
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div>
@@ -36,7 +36,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
-                    @if (userID == 1)
+                    @if (roleID == 1)
                     {
                         <li id="image">
                             @Html.ActionLink("Image Management", "Index", "Admin")

@@ -117,50 +117,14 @@ namespace MedImgDBMS.Controllers
             //var images = db.images.Include(i => i.patient).Include(i => i.imagestatu).Include(i => i.user).Include(i => i.user1).Include(i => i.user2);
         }
 
-        // GET: Admin user view
-        public ActionResult UserView(long? id, int? page, string sortOrder, string currentFilter, string preColumn)
-        {
-            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            user usr = db.users.Find(id);                   // Find user in DB
-            if (usr == null)
-            {
-                return HttpNotFound();
-            }
-
-            account acct = (from a in db.accounts
-                            where a.AcctID == id
-                            select a).FirstOrDefault();       // Find account belong to the user
-
-
-            var view = new UserAcctViewModels()               // Initialise a view model for passing into view
-            {
-                User = usr,
-                AcctLName = acct.AcctLName
-            };
-
-            ViewBag.Page = page;            // Create viewbag variable for current page
-            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
-            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
-            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
-            ViewBag.userName = (from u in db.users
-                                where (u.UserID == userID)
-                                select u.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
-            return View(view);
-        }
-
         // GET: Admin/Create
         public ActionResult Create()
         {
             int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
 
             var usr = from u in db.users
-                      select u.UserID;                                       // Get current user IDs in database
-            TempData["usrMax"] = Convert.ToInt32(usr.Max().ToString()) + 1;          // Get the next user ID
+                      select u.UserID;                                              // Get current user IDs in database
+            TempData["usrMax"] = Convert.ToInt32(usr.Max().ToString()) + 1;         // Put next user id into temp data
 
             var Role = db.roles.Select(r => new SelectListItem               // Create role selection list
             {
@@ -207,16 +171,15 @@ namespace MedImgDBMS.Controllers
 
             // If the model was invalid, display and do it over again
             var usr = from u in db.users
-                      select u.UserID;                                      // Get current user IDs in database
-            int usrMax = Convert.ToInt32(usr.Max().ToString()) + 1;         // Get the next user ID
+                      select u.UserID;                                              // Get current user IDs in database
+            TempData["usrMax"] = Convert.ToInt32(usr.Max().ToString()) + 1;         // Put next user id into temp data
 
-            var Role = db.roles.Select(r => new SelectListItem         // Create role selection list
+            var Role = db.roles.Select(r => new SelectListItem              // Create role selection list
             {
                 Text = r.RoleName,
                 Value = r.RoleID.ToString()
             });
 
-            ViewBag.UserID = usrMax;             // Pass the user ID
             ViewBag.UserRoleID = new SelectList(Role.OrderBy(r => r.Text), "Value", "Text");      // Pass role selection list
 
             ViewBag.userName = (from u in db.users
@@ -236,12 +199,13 @@ namespace MedImgDBMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            user usr = db.users.Find(id);
-            account acct = db.accounts.Find(id);
-            var view = new UserAcctViewModels()               // Initialise a view model for passing into view
+
+            user usr = db.users.Find(id);                           // Find user
+            account acct = db.accounts.Find(id);                    // Find account
+            var view = new UserAcctEditViewModels()                 // Initialise a view model for passing into view
             {
                 User = usr,
-                AcctLName = acct.AcctLName
+                Account = acct
             };
 
             if (usr == null)
@@ -253,8 +217,8 @@ namespace MedImgDBMS.Controllers
             ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
             ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
             ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
-            ViewBag.UserRoleID = new SelectList(db.roles, "RoleID", "RoleName", usr.UserRoleID);                              // Pass role selection list with default value
-            ViewBag.AccountStatus = new SelectList(db.accountstatus, "AcctStatID", "AcctStatusName", acct.AcctStatus);      // Pass account status selection list with default value
+            ViewBag.UserRoleID = new SelectList(db.roles, "RoleID", "RoleName", usr.UserRoleID);                         // Pass role selection list with default value
+            ViewBag.AcctStatus = new SelectList(db.accountstatus, "AcctStatID", "AcctStatusName", acct.AcctStatus);      // Pass account status selection list with default value
             ViewBag.userName = (from u in db.users
                                 where (u.UserID == userID)
                                 select u.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
@@ -267,14 +231,17 @@ namespace MedImgDBMS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string page, string sortOrder, string currentFilter, string preColumn, UserAcctViewModels uaModel)
+        public ActionResult Edit(string page, string sortOrder, string currentFilter, string preColumn, UserAcctEditViewModels uaeModel, string UserRoleID, string AcctStatus)
         {
             int intPage = Convert.ToInt32(page);    // Convert page to integer
 
-            if (ModelState.IsValid)
+            uaeModel.User.UserRoleID = Convert.ToInt32(UserRoleID != null ? UserRoleID.ToString() : "1");                    // Set user role id
+            uaeModel.Account.AcctStatus = Convert.ToInt32(AcctStatus != null ? AcctStatus.ToString() : "1");                 // Set account status
+
+            if (ModelState.IsValid)     // Update user and account
             {
-                db.Entry(uaModel.User).State = EntityState.Modified;
-                //db.Entry(uaModel.Account).State = EntityState.Modified;
+                db.Entry(uaeModel.User).State = EntityState.Modified;
+                db.Entry(uaeModel.Account).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", new { sucMsg = "User modified", page = intPage, sortOrder = sortOrder, currentFilter = currentFilter, preColumn = preColumn });    // Go back to list and display successful message
             }
@@ -285,48 +252,13 @@ namespace MedImgDBMS.Controllers
             ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
             ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
             ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
-            ViewBag.UserRoleID = new SelectList(db.roles, "RoleID", "RoleName", uaModel.User.UserRoleID);                              // Pass role selection list with default value
-            //ViewBag.AccountStatus = new SelectList(db.accountstatus, "AcctStatID", "AcctStatusName", uaModel.Account.AcctStatus);      // Pass account status selection list with default value
+            ViewBag.UserRoleID = new SelectList(db.roles, "RoleID", "RoleName", uaeModel.User.UserRoleID);                              // Pass role selection list with default value
+            ViewBag.AccountStatus = new SelectList(db.accountstatus, "AcctStatID", "AcctStatusName", uaeModel.Account.AcctStatus);      // Pass account status selection list with default value
             ViewBag.userName = (from u in db.users
                                 where (u.UserID == userID)
                                 select u.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
-            return View(uaModel);
-        }
-
-        // GET: Admin/Delete/5
-        public ActionResult Delete(long? id)
-        {
-            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            user usr = db.users.Find(id);
-
-            ViewBag.userName = (from u in db.users
-                                where (u.UserID == userID)
-                                select u.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
-
-            if (usr == null)
-            {
-                return HttpNotFound();
-            }
-            return View(usr);
-        }
-
-        // POST: Admin/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(long id)
-        {
-            account acct = db.accounts.Find(id);
-            user usr = db.users.Find(id);
-            db.accounts.Remove(acct);
-            db.users.Remove(usr);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            return View(uaeModel);
         }
 
         protected override void Dispose(bool disposing)

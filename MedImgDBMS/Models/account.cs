@@ -17,8 +17,12 @@ namespace MedImgDBMS.Models
     public partial class account
     {
         public long AcctID { get; set; }
+        [Required(ErrorMessage = "Please enter account name")]
         [DisplayName("Account Name")]
         public string AcctLName { get; set; }
+        [Required(ErrorMessage = "Please enter password")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
         [DisplayName("Password")]
         public string AcctPasswd { get; set; }
         [DisplayName("Account Status")]

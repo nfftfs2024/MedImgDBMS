@@ -1,62 +1,115 @@
-﻿@model MedImgDBMS.Models.user
+﻿@model MedImgDBMS.ViewModels.UserAcctEditViewModels
 
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    int pageint = ViewBag.Page;
+    string page = pageint.ToString();
+    string sortOrder = ViewBag.Order;
+    string currentFilter = ViewBag.Filter;
+    string preCol = ViewBag.PreColumn;
 }
 
-<h2>Edit</h2>
+<h2>Edit User</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
+    if (page != null)
+    {
+        @Html.Hidden("page", page)
+    }
+    if (sortOrder != null)
+    {
+        @Html.Hidden("sortOrder", sortOrder)
+    }
+    if (currentFilter != null)
+    {
+        @Html.Hidden("currentFilter", currentFilter)
+    }
+    if (preCol != null)
+    {
+        @Html.Hidden("preColumn", preCol)
+    }
+
     <div class="form-horizontal">
-        <h4>user</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.UserID)
+        @Html.HiddenFor(model => model.User.UserID)
+        @Html.HiddenFor(model => model.Account.AcctID)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.UserLName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.User.UserID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.UserLName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UserLName, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.User.UserID, new { htmlAttributes = new { @class = "form-control" } })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.UserFName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.User.UserLName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.UserFName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UserFName, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.User.UserLName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.User.UserLName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.User.UserFName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.User.UserFName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.User.UserFName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.UserRoleID, "UserRoleID", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.User.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.User.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.User.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.User.UserRoleID, "User Role", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("UserRoleID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.UserRoleID, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.User.UserRoleID, "", new { @class = "text-danger" })
             </div>
         </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Account.AcctLName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Account.AcctLName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Account.AcctLName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.Account.AcctPasswd, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Account.AcctPasswd, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Account.AcctPasswd, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.Account.AcctStatus, "Account Status", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("AcctStatus", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Account.AcctStatus, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br />
+        <br />
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('Are you sure to change the details?')" />
+                <button class="btn btn-primary-cancel" type="button" onclick="location.href='@Url.Action("Index", "AdminUser", new {page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = ViewBag.PreColumn})'">Cancel</button>
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
