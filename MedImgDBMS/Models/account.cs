@@ -12,6 +12,7 @@ namespace MedImgDBMS.Models
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
 
     public partial class account
     {
@@ -23,7 +24,13 @@ namespace MedImgDBMS.Models
         [DisplayName("Account Status")]
         public long AcctStatus { get; set; }
         public System.DateTime AcctCreateTime { get; set; }
-    
+
+        public account()
+        {
+            AcctStatus = 1;
+            AcctCreateTime = DateTime.UtcNow;
+        }
+
         public virtual accountstatu accountstatu { get; set; }
         public virtual user user { get; set; }
     }

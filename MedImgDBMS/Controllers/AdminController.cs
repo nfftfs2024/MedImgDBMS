@@ -241,7 +241,7 @@ namespace MedImgDBMS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(image newImg, string PatientId)
+        public ActionResult Create(image newImg)
         {
             int userID = Convert.ToInt32(Session["UserID"].ToString());     // Get session user id
             newImg.ImgPath = newImg.ImgPath + newImg.ImgName + ".jpg";      // Set image path
@@ -386,6 +386,8 @@ namespace MedImgDBMS.Controllers
                 Value = p.UserID.ToString()
             });
 
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
             ViewBag.Page = intPage;         // Create viewbag variable for current page
             ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
             ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
@@ -395,6 +397,9 @@ namespace MedImgDBMS.Controllers
             ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text", image.ImgExpID);       // Pass the expert selection list with default value
             ViewBag.ImgCreator = new SelectList(Creator.OrderBy(p => p.Text), "Value", "Text", image.ImgCreator);   // Pass the creator selection list with default value
             ViewBag.ImgStatus = new SelectList(db.imagestatus, "ImgStatID", "ImgStatusName", image.ImgStatus);      // Pass image status selection list with default value
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
             return View(image);
         }

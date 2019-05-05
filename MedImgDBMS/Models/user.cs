@@ -12,6 +12,7 @@ namespace MedImgDBMS.Models
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     
     public partial class user
     {
@@ -27,10 +28,16 @@ namespace MedImgDBMS.Models
     
         public long UserID { get; set; }
         [DisplayName("Last Name")]
+        [Required(ErrorMessage = "Please enter last name")]
         public string UserLName { get; set; }
         [DisplayName("First Name")]
+        [Required(ErrorMessage = "Please enter first name")]
         public string UserFName { get; set; }
+        [Required(ErrorMessage = "Please enter email")]
+        [EmailAddress]
+        [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", ErrorMessage = "Email is not valid.")]
         public string Email { get; set; }
+        [DisplayName("Role")]
         public long UserRoleID { get; set; }
     
         public virtual account account { get; set; }

@@ -62,14 +62,14 @@
             }
             @if (Model.Comment != null)
             {
-                
+
                 <label>Doctor Comment:</label>
                 <br />
                 <p>@Html.DisplayFor(model => model.Comment.CmtText)</p>
                 <hr />
             }
             <button class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Admin", new {id = Model.Image.ImgID, page = ViewBag.Page, sortOrder = ViewBag.Order, currentFilter = ViewBag.Filter, preColumn = ViewBag.PreColumn })'">Edit</button> |
-            @Html.ActionLink("Back to List", "Index", new { page = ViewBag.Page, sortOrder = ViewBag.Order, currentFilter = ViewBag.Filter, preColumn = ViewBag.PreColumn })
+            <button class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Admin", new { page = ViewBag.Page, sortOrder = ViewBag.Order, currentFilter = ViewBag.Filter, preColumn = ViewBag.PreColumn })'">Go Back</button>
         </div>
     </div>
 </div>

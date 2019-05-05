@@ -1,0 +1,52 @@
+﻿@model IEnumerable<MedImgDBMS.Models.patient>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PatLName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PatFName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DOB)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Gender)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PatLName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PatFName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DOB)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Gender)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PatID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PatID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PatID })
+        </td>
+    </tr>
+}
+
+</table>
