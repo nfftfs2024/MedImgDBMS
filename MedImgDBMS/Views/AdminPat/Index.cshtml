@@ -1,0 +1,94 @@
+﻿@model PagedList.IPagedList<MedImgDBMS.Models.patient>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    SelectList searchCol = ViewBag.SearchCol;
+    string preCol = ViewBag.PreColumn;
+    var message = ViewBag.SuccessMsg;
+}
+
+<script type="text/javascript">
+    var message = '@message';
+        if (message) {
+            alert(message);
+        }
+</script>
+
+<h2>Patient Management</h2>
+<button style="margin-left:50px" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "AdminPat")'">Create New</button>
+<div class="container-list">
+    <hr />
+    @using (Html.BeginForm("Index", "AdminPat", FormMethod.Get))
+    {
+        <p>
+            @Html.DropDownList("preColumn", searchCol)
+            @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" />
+        </p>
+    }
+
+    <table class="table">
+        <tr>
+            <th style="width: 15%">
+                @Html.ActionLink("Patient ID", "Index", new { sortOrder = ViewBag.IDSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.ActionLink("Patient FirstName", "Index", new { sortOrder = ViewBag.PatFSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.ActionLink("Patient LastName", "Index", new { sortOrder = ViewBag.PatLSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.ActionLink("Date of Birth", "Index", new { sortOrder = ViewBag.DOBSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.Label("Gender", new { @style = "font-size: 18px; color: #008cba; font-weight: bold" })
+            </th>
+            <th style="width: 16%"></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.PatID)
+                </td>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.PatFName)
+                </td>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.PatLName)
+                </td>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.DOB)
+                </td>
+                <td style="width: 15%">
+                    @if (item.Gender != null)
+                    {
+                        if (item.Gender.ToString() == "M")
+                        {
+                            @Html.Label("Male", new { @style = "font-size: 16px" })
+                        }
+                        if (item.Gender.ToString() == "F")
+                        {
+                            @Html.Label("Female", new { @style = "font-size: 16px" })
+                        }
+                    }
+                </td>
+                <td style="width: 16%">
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "AdminPat", new { id = item.PatID, page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })'">Edit</button>
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Delete", "AdminPat", new { id = item.PatID })'">Delete</button>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+                             new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol }))
+</div>

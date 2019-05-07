@@ -1,0 +1,83 @@
+﻿@model PagedList.IPagedList<MedImgDBMS.Models.user>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    SelectList searchCol = ViewBag.SearchCol;
+    string preCol = ViewBag.PreColumn;
+    var message = ViewBag.SuccessMsg;
+}
+
+<script type="text/javascript">
+    var message = '@message';
+        if (message) {
+            alert(message);
+        }
+</script>
+
+<h2>User Management</h2>
+<button style="margin-left:50px" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "AdminUser")'">Create New</button>
+<div class="container-list">
+    <hr />
+    @using (Html.BeginForm("Index", "AdminUser", FormMethod.Get))
+    {
+        <p>
+            @Html.DropDownList("preColumn", searchCol)
+            @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" />
+        </p>
+    }
+
+    <table class="table">
+        <tr>
+            <th style="width: 15%">
+                @Html.ActionLink("User ID", "Index", new { sortOrder = ViewBag.IDSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.ActionLink("User FirstName", "Index", new { sortOrder = ViewBag.UsrFSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.ActionLink("User LastName", "Index", new { sortOrder = ViewBag.UsrLSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.ActionLink("Email", "Index", new { sortOrder = ViewBag.MailSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 15%">
+                @Html.ActionLink("Role", "Index", new { sortOrder = ViewBag.RoleSortParm, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })
+            </th>
+            <th style="width: 16%"></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.UserID)
+                </td>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.UserFName)
+                </td>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.UserLName)
+                </td>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td style="width: 15%">
+                    @Html.DisplayFor(modelItem => item.role.RoleName)
+                </td>
+                <td style="width: 16%">
+                    <button class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "AdminUser", new { id = item.UserID, page = ViewBag.Page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol })'">Edit</button>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <br />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+                         new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, preColumn = preCol }))
+</div>

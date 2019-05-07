@@ -40,9 +40,9 @@ namespace MedImgDBMS.Controllers
             ViewBag.PreColumn = String.IsNullOrEmpty(preColumn) ? "1" : preColumn;  // Set previously searched column in viewbag, default at 1
             ViewBag.SuccessMsg = sucMsg;            // Get successful message
             ViewBag.CurrentSort = sortOrder;        // Get current sorting
-            ViewBag.PatLSortParm = String.IsNullOrEmpty(sortOrder) ? "patient_last_desc" : "";              // Sort by patient last name
+            ViewBag.TimeSortParm = String.IsNullOrEmpty(sortOrder) ? "create_time" : "";                    // Sort by image create time
             ViewBag.PatFSortParm = sortOrder == "patient_first" ? "patient_first_desc" : "patient_first";   // Sort by patient first name
-            ViewBag.TimeSortParm = sortOrder == "create_time" ? "create_time_desc" : "create_time";         // Sort by image create time
+            ViewBag.PatLSortParm = sortOrder == "patient_last" ? "patient_last_desc" : "patient_last";      // Sort by patient last name
             ViewBag.StatSortParm = sortOrder == "img_status" ? "img_status_desc" : "img_status";            // Sort by image status
             ViewBag.ImgNameSortParm = sortOrder == "img_name" ? "img_name_desc" : "img_name";               // Sort by image name
             ViewBag.CreatorSortParm = sortOrder == "creator" ? "creator_desc" : "creator";                  // Sort by image creator
@@ -90,6 +90,9 @@ namespace MedImgDBMS.Controllers
 
             switch (sortOrder)      // Check sorting case
             {
+                case "patient_last":        // By patient last name ascending
+                    images = images.OrderBy(s => s.patient.PatLName);
+                    break;
                 case "patient_last_desc":   // By patient last name descending
                     images = images.OrderByDescending(s => s.patient.PatLName);
                     break;
@@ -102,41 +105,38 @@ namespace MedImgDBMS.Controllers
                 case "create_time":         // By image create time ascending
                     images = images.OrderBy(s => s.ImgCreateTime);
                     break;
-                case "create_time_desc":    // By image create time descending
-                    images = images.OrderByDescending(s => s.ImgCreateTime);
-                    break;
                 case "img_status":          // By image status ascending
                     images = images.OrderBy(s => s.ImgStatus);
                     break;
                 case "img_status_desc":     // By image status descending
                     images = images.OrderByDescending(s => s.ImgStatus);
                     break;
-                case "img_name":
+                case "img_name":            // By image name ascending
                     images = images.OrderBy(s => s.ImgName);
                     break;
-                case "img_name_desc":
+                case "img_name_desc":       // By image name descending
                     images = images.OrderByDescending(s => s.ImgName);
                     break;
-                case "creator":
+                case "creator":             // By image creator ascending
                     images = images.OrderBy(s => s.Createuser.UserFName);
                     break;
-                case "creator_desc":
+                case "creator_desc":        // By image creator descending
                     images = images.OrderByDescending(s => s.Createuser.UserFName);
                     break;
-                case "doctor":
+                case "doctor":              // By doctor ascending
                     images = images.OrderBy(s => s.Docuser.UserFName);
                     break;
-                case "doctor_desc":
+                case "doctor_desc":         // By doctor descending
                     images = images.OrderByDescending(s => s.Docuser.UserFName);
                     break;
-                case "expert":
+                case "expert":              // By expert ascending
                     images = images.OrderBy(s => s.Expuser.UserFName);
                     break;
-                case "expert_desc":
+                case "expert_desc":         // By expert descending
                     images = images.OrderByDescending(s => s.Expuser.UserFName);
                     break;
-                default:                    // Default sorting by patient last name ascending
-                    images = images.OrderBy(s => s.patient.PatLName);
+                default:                    // Default sorting by image create time descending
+                    images = images.OrderByDescending(s => s.ImgCreateTime);
                     break;
             }
 
@@ -155,6 +155,8 @@ namespace MedImgDBMS.Controllers
         // GET: Admin image view
         public ActionResult ImageView(long? id, int? page, string sortOrder, string currentFilter, string preColumn)
         {
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -184,17 +186,22 @@ namespace MedImgDBMS.Controllers
             //string img_link = "http://" + server + "/" + img.ImgPath;   // Concatenate image URL
             string img_link = "~/" + img.ImgPath;
 
-            ViewBag.link = img_link;        // Create viewbag variable for image URL
-            ViewBag.Page = page;            // Create viewbag variable for current page
-            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
-            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
-            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.link = img_link;                // Create viewbag variable for image URL
+            ViewBag.Page = page;                    // Create viewbag variable for current page
+            ViewBag.CurrentSort = sortOrder;          // Create viewbag variable for current sort
+            ViewBag.CurrentFilter = currentFilter;  // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;          // Create viewbag variable for filtering column
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
             return View(view);
         }
 
         // GET: Admin/Create
         public ActionResult Create()
         {
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
             var img = from i in db.images
                       select i.ImgID;                                       // Get current image IDs in database
             int imgMax = Convert.ToInt32(img.Max().ToString()) + 1;         // Get the next image ID
@@ -221,6 +228,9 @@ namespace MedImgDBMS.Controllers
             ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text");       // Pass the patient selection list
             ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the doctor selection list
             ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the expert selection list
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
             image image = new image();      // Create a new image object
             return View(image);
@@ -231,7 +241,7 @@ namespace MedImgDBMS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(image newImg, string PatientId)
+        public ActionResult Create(image newImg)
         {
             int userID = Convert.ToInt32(Session["UserID"].ToString());     // Get session user id
             newImg.ImgPath = newImg.ImgPath + newImg.ImgName + ".jpg";      // Set image path
@@ -271,6 +281,9 @@ namespace MedImgDBMS.Controllers
             ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text");       // Pass the patient selection list
             ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the doctor selection list
             ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text");       // Pass the expert selection list
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
             image image = new image();      // Create a new image object
             return View(image);
@@ -279,6 +292,8 @@ namespace MedImgDBMS.Controllers
         // GET: Admin/Edit/5
         public ActionResult Edit(long? id, int? page, string sortOrder, string currentFilter, string preColumn)
         {
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -314,16 +329,19 @@ namespace MedImgDBMS.Controllers
             //string img_link = "http://" + server + "/" + image.ImgPath;   // Concatenate image URL
             string img_link = "~/" + image.ImgPath;
 
-            ViewBag.link = img_link;        // Create viewbag variable for image URL
-            ViewBag.Page = page;            // Create viewbag variable for current page
-            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
-            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
-            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            ViewBag.link = img_link;                // Create viewbag variable for image URL
+            ViewBag.Page = page;                    // Create viewbag variable for current page
+            ViewBag.CurrentSort = sortOrder;          // Create viewbag variable for current sort
+            ViewBag.CurrentFilter = currentFilter;  // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;          // Create viewbag variable for filtering column
             ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text", image.ImgPatID);       // Pass the patient selection list with default value
             ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text", image.ImgDocID);       // Pass the doctor selection list with default value
             ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text", image.ImgExpID);       // Pass the expert selection list with default value
             ViewBag.ImgCreator = new SelectList(Creator.OrderBy(p => p.Text), "Value", "Text", image.ImgCreator);   // Pass the creator selection list with default value
             ViewBag.ImgStatus = new SelectList(db.imagestatus, "ImgStatID", "ImgStatusName", image.ImgStatus);      // Pass image status selection list with default value
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
             return View(image);
         }
@@ -368,15 +386,20 @@ namespace MedImgDBMS.Controllers
                 Value = p.UserID.ToString()
             });
 
-            ViewBag.Page = intPage;         // Create viewbag variable for current page
-            ViewBag.Order = sortOrder;      // Create viewbag variable for current sort
-            ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
-            ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
+            ViewBag.Page = intPage;                 // Create viewbag variable for current page
+            ViewBag.CurrentSort = sortOrder;          // Create viewbag variable for current sort
+            ViewBag.CurrentFilter = currentFilter;  // Create viewbag variable for current filter
+            ViewBag.PreColumn = preColumn;      // Create viewbag variable for filtering column
             ViewBag.ImgPatID = new SelectList(Patient.OrderBy(p => p.Text), "Value", "Text", image.ImgPatID);       // Pass the patient selection list with default value
             ViewBag.ImgDocID = new SelectList(DocUser.OrderBy(p => p.Text), "Value", "Text", image.ImgDocID);       // Pass the doctor selection list with default value
             ViewBag.ImgExpID = new SelectList(ExpUser.OrderBy(p => p.Text), "Value", "Text", image.ImgExpID);       // Pass the expert selection list with default value
             ViewBag.ImgCreator = new SelectList(Creator.OrderBy(p => p.Text), "Value", "Text", image.ImgCreator);   // Pass the creator selection list with default value
             ViewBag.ImgStatus = new SelectList(db.imagestatus, "ImgStatID", "ImgStatusName", image.ImgStatus);      // Pass image status selection list with default value
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
             return View(image);
         }
@@ -384,6 +407,8 @@ namespace MedImgDBMS.Controllers
         // GET: Admin/Delete/5
         public ActionResult Delete(long? id)
         {
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -395,6 +420,9 @@ namespace MedImgDBMS.Controllers
             string img_link = "~/" + image.ImgPath;
 
             ViewBag.link = img_link;        // Create viewbag variable for image URL
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
 
             if (image == null)
             {

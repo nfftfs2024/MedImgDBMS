@@ -40,9 +40,9 @@ namespace MedImgDBMS.Controllers
             ViewBag.SearchCol = new SelectList(searchCol, "Value", "Text");         // Set search column dropdown list in viewbag
             ViewBag.PreColumn = String.IsNullOrEmpty(preColumn) ? "1" : preColumn;  // Set previously searched column in viewbag, default at 1
             ViewBag.CurrentSort = sortOrder;        // Get current sorting
-            ViewBag.PatLSortParm = String.IsNullOrEmpty(sortOrder) ? "patient_last_desc" : "";              // Sort by patient last name
+            ViewBag.TimeSortParm = String.IsNullOrEmpty(sortOrder) ? "create_time" : "";              // Sort by image create time
             ViewBag.PatFSortParm = sortOrder == "patient_first" ? "patient_first_desc" : "patient_first";   // Sort by patient first name
-            ViewBag.TimeSortParm = sortOrder == "create_time" ? "create_time_desc" : "create_time";         // Sort by image create time
+            ViewBag.PatLSortParm = sortOrder == "patient_last" ? "patient_last_desc" : "patient_last_time"; // Sort by patient last name
             ViewBag.StatSortParm = sortOrder == "img_status" ? "img_status_desc" : "img_status";            // Sort by image status
             ViewBag.userName = (from usr in db.users
                                 where (usr.UserID == userID)
@@ -87,6 +87,9 @@ namespace MedImgDBMS.Controllers
 
             switch (sortOrder)      // Check sorting case
             {
+                case "patient_last":        // By patient last name ascending
+                    images = images.OrderBy(s => s.patient.PatLName);
+                    break;
                 case "patient_last_desc":   // By patient last name descending
                     images = images.OrderByDescending(s => s.patient.PatLName);
                     break;
@@ -99,17 +102,14 @@ namespace MedImgDBMS.Controllers
                 case "create_time":         // By image create time ascending
                     images = images.OrderBy(s => s.ImgCreateTime);
                     break;
-                case "create_time_desc":    // By image create time descending
-                    images = images.OrderByDescending(s => s.ImgCreateTime);
-                    break;
                 case "img_status":          // By image status ascending
                     images = images.OrderBy(s => s.ImgStatus);
                     break;
                 case "img_status_desc":     // By image status descending
                     images = images.OrderByDescending(s => s.ImgStatus);
                     break;
-                default:                    // Default sorting by patient last name ascending
-                    images = images.OrderBy(s => s.patient.PatLName);
+                default:                    // Default sorting by image create time descending
+                    images = images.OrderByDescending(s => s.ImgCreateTime);
                     break;
             }
 
@@ -183,8 +183,13 @@ namespace MedImgDBMS.Controllers
                     cmt.CmtCreator = userID;
                     cmt.ImgID = id;                                     // Set comment columns
 
-                    img.ImgStatus = img.ImgStatus + 1;                  // Change image status to comment uploaded
-
+                    if (submit == "save")
+                        img.ImgStatus = 11;                  // Change image status to comment uploaded
+                    else
+                    {
+                        img.ImgStatus = 3;                   // Change image status to closed
+                        img.RepStatus = 3;                   // Change report status to submitted
+                    }
                     if (ModelState.IsValid)
                     {
                         db.comments.Add(cmt);
@@ -195,6 +200,7 @@ namespace MedImgDBMS.Controllers
                 }
                 else                    // When there is existing comment
                 {
+                    image img = db.images.Find(id);                     // Find the image
                     comment cmt= (from c in db.comments
                                   where c.ImgID == id
                                   select c).FirstOrDefault();           // Find the existing comment
@@ -204,17 +210,19 @@ namespace MedImgDBMS.Controllers
 
                     if (submit == "save")                               // Check if the comment is saved again
                     {
+                        img.ImgStatus = 11;                             // Change image status to comment uploaded
                         if (ModelState.IsValid)
                         {
                             db.Entry(cmt).State = EntityState.Modified;
+                            db.Entry(img).State = EntityState.Modified;
                             db.SaveChanges();
                             message = "Comment saved";
                         }
                     }
                     else                                                // The image case is closed
                     {
-                        image img = db.images.Find(id);
-                        img.ImgStatus = img.ImgStatus + 1;              // Change image status to closed
+                        img.ImgStatus = 3;                              // Change image status to closed
+                        img.RepStatus = 3;                              // Change report status to submitted
                         {
                             db.Entry(cmt).State = EntityState.Modified;
                             db.Entry(img).State = EntityState.Modified;
@@ -234,11 +242,15 @@ namespace MedImgDBMS.Controllers
             report rep = (from r in db.reports
                            where r.ImgID == id
                            select r).FirstOrDefault();    // Find reports belong to this image
+            comment cmt = (from s in db.comments
+                           where s.ImgID == id
+                           select s).FirstOrDefault();      // Find comment belong to the image
 
             var view = new ImgRepCmtViewModels()               // Initialise a view model for passing into view
             {
                 Image = img,
-                Report = rep
+                Report = rep,
+                Comment = cmt
             };
 
             //string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
@@ -281,7 +293,16 @@ namespace MedImgDBMS.Controllers
                     rep.RepCreator = userID;
                     rep.ImgID = id;                                     // Set report columns
 
-                    img.ImgStatus = img.ImgStatus + 1;                  // Change image status to report drafted
+                    if (submit == "save")
+                    {
+                        img.ImgStatus = 10;         // Change image status to report drafted
+                        img.RepStatus = 2;          // Change report status to saved
+                    }
+                    else
+                    {
+                        img.ImgStatus = 2;          // Change image status to report finalised
+                        img.RepStatus = 3;          // Change report status to submitted
+                    }
 
                     if (ModelState.IsValid)
                     {
@@ -293,6 +314,7 @@ namespace MedImgDBMS.Controllers
                 }
                 else                    // When there is existing report
                 {
+                    image img = db.images.Find(id);                     // Find the image
                     report rep = (from r in db.reports
                                   where r.ImgID == id
                                   select r).FirstOrDefault();           // Find the existing report
@@ -302,17 +324,19 @@ namespace MedImgDBMS.Controllers
 
                     if (submit == "save")                               // Check if the report is saved again
                     {
+                        img.ImgStatus = 10;                             // Change image status to report drafted
                         if (ModelState.IsValid)
                         {
                             db.Entry(rep).State = EntityState.Modified;
+                            db.Entry(img).State = EntityState.Modified;
                             db.SaveChanges();
                             message = "Report saved";
                         }
                     }
                     else                                                // The report is submitted
                     {
-                        image img = db.images.Find(id);
-                        img.ImgStatus = img.ImgStatus + 1;              // Change image status to report finalised
+                        img.ImgStatus = 2;                              // Change image status to report finalised
+                        img.RepStatus = 3;                              // Change report status to submitted
                         if (ModelState.IsValid)
                         {
                             db.Entry(rep).State = EntityState.Modified;

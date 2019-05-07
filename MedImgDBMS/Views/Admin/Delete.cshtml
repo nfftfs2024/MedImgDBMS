@@ -86,7 +86,7 @@
     </dl>
     <br />
     <div>
-        <img src="@Url.Content(@path)" class= "img-deleteview" />
+        <img src="@Url.Content(@path)" class="img-deleteview" />
     </div>
     <br />
     <hr />
@@ -96,8 +96,11 @@
         @Html.AntiForgeryToken()
 
         <div style="margin-left: 50px;">
-            <input type="submit" value="Delete" class="btn btn-primary" onclick="return confirm('Are you sure?')" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="Delete" class="btn btn-primary" onclick="return confirm('Are you sure?')" />
         </div>
     }
+    <hr />
+    <div style="margin-left: 50px;">
+        <button class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Admin")'">Go Back</button>
+    </div>
 </div>
