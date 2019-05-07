@@ -61,7 +61,7 @@
                 <dd class="clearfix">@Html.DisplayFor(model => model.Image.Expuser.UserFName) @Html.DisplayFor(model => model.Image.Expuser.UserLName)</dd>
             </dl>
             <hr />
-            @if (Model.Image.ImgStatus != 3)
+            @if (Model.Image.RepStatus != 3)
             {
                 using (Html.BeginForm())
                 {
@@ -99,6 +99,14 @@
                 <div>
                     <label>Report:</label>
                     <p>@Html.DisplayFor(model => model.Report.RepText)</p>
+                    <hr />
+                </div>
+            }
+            @if (Model.Comment != null)
+            {
+                <div>
+                    <label>Doctor Comment:</label>
+                    <p>@Html.DisplayFor(model => model.Comment.CmtText)</p>
                 </div>
             }
             <p>

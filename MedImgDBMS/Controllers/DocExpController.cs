@@ -184,10 +184,12 @@ namespace MedImgDBMS.Controllers
                     cmt.ImgID = id;                                     // Set comment columns
 
                     if (submit == "save")
-                        img.ImgStatus = img.ImgStatus + 1;                  // Change image status to comment uploaded
+                        img.ImgStatus = 11;                  // Change image status to comment uploaded
                     else
-                        img.ImgStatus = img.ImgStatus + 2;                  // Change image status to closed
-
+                    {
+                        img.ImgStatus = 3;                   // Change image status to closed
+                        img.RepStatus = 3;                   // Change report status to submitted
+                    }
                     if (ModelState.IsValid)
                     {
                         db.comments.Add(cmt);
@@ -198,6 +200,7 @@ namespace MedImgDBMS.Controllers
                 }
                 else                    // When there is existing comment
                 {
+                    image img = db.images.Find(id);                     // Find the image
                     comment cmt= (from c in db.comments
                                   where c.ImgID == id
                                   select c).FirstOrDefault();           // Find the existing comment
@@ -207,17 +210,19 @@ namespace MedImgDBMS.Controllers
 
                     if (submit == "save")                               // Check if the comment is saved again
                     {
+                        img.ImgStatus = 11;                             // Change image status to comment uploaded
                         if (ModelState.IsValid)
                         {
                             db.Entry(cmt).State = EntityState.Modified;
+                            db.Entry(img).State = EntityState.Modified;
                             db.SaveChanges();
                             message = "Comment saved";
                         }
                     }
                     else                                                // The image case is closed
                     {
-                        image img = db.images.Find(id);
-                        img.ImgStatus = img.ImgStatus + 1;              // Change image status to closed
+                        img.ImgStatus = 3;                              // Change image status to closed
+                        img.RepStatus = 3;                              // Change report status to submitted
                         {
                             db.Entry(cmt).State = EntityState.Modified;
                             db.Entry(img).State = EntityState.Modified;
@@ -237,11 +242,15 @@ namespace MedImgDBMS.Controllers
             report rep = (from r in db.reports
                            where r.ImgID == id
                            select r).FirstOrDefault();    // Find reports belong to this image
+            comment cmt = (from s in db.comments
+                           where s.ImgID == id
+                           select s).FirstOrDefault();      // Find comment belong to the image
 
             var view = new ImgRepCmtViewModels()               // Initialise a view model for passing into view
             {
                 Image = img,
-                Report = rep
+                Report = rep,
+                Comment = cmt
             };
 
             //string server = db.Database.Connection.DataSource.ToString(); // Get db server name for retrieving image
@@ -285,9 +294,15 @@ namespace MedImgDBMS.Controllers
                     rep.ImgID = id;                                     // Set report columns
 
                     if (submit == "save")
-                        img.ImgStatus = img.ImgStatus + 1;                  // Change image status to report drafted
+                    {
+                        img.ImgStatus = 10;         // Change image status to report drafted
+                        img.RepStatus = 2;          // Change report status to saved
+                    }
                     else
-                        img.ImgStatus = img.ImgStatus + 2;                  // Change image status to report finalised
+                    {
+                        img.ImgStatus = 2;          // Change image status to report finalised
+                        img.RepStatus = 3;          // Change report status to submitted
+                    }
 
                     if (ModelState.IsValid)
                     {
@@ -299,6 +314,7 @@ namespace MedImgDBMS.Controllers
                 }
                 else                    // When there is existing report
                 {
+                    image img = db.images.Find(id);                     // Find the image
                     report rep = (from r in db.reports
                                   where r.ImgID == id
                                   select r).FirstOrDefault();           // Find the existing report
@@ -308,17 +324,19 @@ namespace MedImgDBMS.Controllers
 
                     if (submit == "save")                               // Check if the report is saved again
                     {
+                        img.ImgStatus = 10;                             // Change image status to report drafted
                         if (ModelState.IsValid)
                         {
                             db.Entry(rep).State = EntityState.Modified;
+                            db.Entry(img).State = EntityState.Modified;
                             db.SaveChanges();
                             message = "Report saved";
                         }
                     }
                     else                                                // The report is submitted
                     {
-                        image img = db.images.Find(id);
-                        img.ImgStatus = img.ImgStatus + 1;              // Change image status to report finalised
+                        img.ImgStatus = 2;                              // Change image status to report finalised
+                        img.RepStatus = 3;                              // Change report status to submitted
                         if (ModelState.IsValid)
                         {
                             db.Entry(rep).State = EntityState.Modified;

@@ -63,51 +63,50 @@
             <hr />
             @if (Model.Report != null)
             {
-                <label>Report:</label>
+                <label>Stomatologist Report:</label>
                 <p>@Html.DisplayFor(model => model.Report.RepText)</p>
                 <hr />
-
-                <label>Doctor Comment:</label>
-                <br />
-                if (Model.Image.ImgStatus != 5)
+            }
+            <label>Comment:</label>
+            <br />
+            @if (Model.Image.ImgStatus != 5)
+            {
+                using (Html.BeginForm())
                 {
-                    using (Html.BeginForm())
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group shadow-textarea">
+                        @Html.TextAreaFor(m => m.Comment.CmtText, new { @class = "form-control-textbox z-depth-1", @placeholder = "Write comment here..." })
+                        @Html.ValidationMessageFor(m => m.Comment.CmtText, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <button class="btn btn-primary" type="submit" name="submit" id="save" value="save">SAVE</button>
+                        <hr />
+                        <button class="btn btn-primary" type="submit" name="submit" id="submit" value="close" onclick="return confirm('Are you sure to close? The comment will not be modified after you close.')">CLOSE CASE</button>
+                    </div>
+                    if (page != null)
                     {
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="form-group shadow-textarea">
-                            @Html.TextAreaFor(m => m.Comment.CmtText, new { @class = "form-control-textbox z-depth-1", @placeholder = "Write comment here..." })
-                            @Html.ValidationMessageFor(m => m.Comment.CmtText, "", new { @class = "text-danger" })
-                        </div>
-                        <div class="form-group col-lg-12">
-                            <button class="btn btn-primary" type="submit" name="submit" id="save" value="save">SAVE</button>
-                            <hr />
-                            <button class="btn btn-primary" type="submit" name="submit" id="submit" value="close" onclick="return confirm('Are you sure to close? The comment will not be modified after you close.')">CLOSE CASE</button>
-                        </div>
-                        if (page != null)
-                        {
-                                @Html.Hidden("page", page)
-                        }
-                        if (sortOrder != null)
-                        {
-                                @Html.Hidden("sortOrder", sortOrder)
-                        }
-                        if (currentFilter != null)
-                        {
-                                @Html.Hidden("currentFilter", currentFilter)
-                        }
-                        if (preCol != null)
-                        {
-                                @Html.Hidden("preColumn", preCol)
-                        }
+                            @Html.Hidden("page", page)
+                    }
+                    if (sortOrder != null)
+                    {
+                            @Html.Hidden("sortOrder", sortOrder)
+                    }
+                    if (currentFilter != null)
+                    {
+                            @Html.Hidden("currentFilter", currentFilter)
+                    }
+                    if (preCol != null)
+                    {
+                            @Html.Hidden("preColumn", preCol)
                     }
                 }
-                else
-                {
-                        <div>
-                            <p>@Html.DisplayFor(model => model.Comment.CmtText)</p>
-                        </div>
-                }
+            }
+            else
+            {
+                    <div>
+                        <p>@Html.DisplayFor(model => model.Comment.CmtText)</p>
+                    </div>
             }
             <p>
                 <button class="btn btn-primary" onclick="location.href='@Url.Action("Index", "DocExp", new { page = ViewBag.Page, sortOrder = ViewBag.Order, currentFilter = ViewBag.Filter, preColumn = ViewBag.PreColumn })'">Go Back</button>
