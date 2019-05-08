@@ -128,6 +128,8 @@ namespace MedImgDBMS.Controllers
         // Doctor image view page
         public ActionResult DocImageView(long? id, int? page, string sortOrder, string currentFilter, string preColumn, string sucMsg)
         {
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
             image img = db.images.Find(id);                 // Find images belong to user id in DB
             report rep = (from r in db.reports
                           where r.ImgID == id
@@ -153,6 +155,9 @@ namespace MedImgDBMS.Controllers
             ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
             ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
             ViewBag.SuccessMsg = sucMsg;    // Create viewbag variable for comment successful message
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
             return View(view);
         }
 
@@ -238,6 +243,8 @@ namespace MedImgDBMS.Controllers
         // Expert image view page
         public ActionResult ExpImageView(long? id, int? page, string sortOrder, string currentFilter, string preColumn, string sucMsg)
         {
+            int userID = Convert.ToInt32(Session["UserID"] != null ? Session["UserID"].ToString() : "0");   // Convert session user id to integer for comparison and prevent from NULL
+
             image img = db.images.Find(id);                // Find images belong to user id in DB
             report rep = (from r in db.reports
                            where r.ImgID == id
@@ -263,6 +270,9 @@ namespace MedImgDBMS.Controllers
             ViewBag.Filter = currentFilter; // Create viewbag variable for current filter
             ViewBag.PreColumn = preColumn;  // Create viewbag variable for filtering column
             ViewBag.SuccessMsg = sucMsg;    // Create viewbag variable for comment successful message
+            ViewBag.userName = (from usr in db.users
+                                where (usr.UserID == userID)
+                                select usr.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
             return View(view);
         }
 

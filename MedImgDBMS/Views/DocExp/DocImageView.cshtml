@@ -27,7 +27,7 @@
         <div class="col-lg-12">
             <h1 class="page-header">
                 @Html.DisplayFor(model => model.Image.ImgName).ToString().ToUpper()
-                <small>@*@ViewBag.link*@</small>
+                <small></small>
             </h1>
             <ol class="breadcrumb">
                 <li>
@@ -47,7 +47,8 @@
             <h3 style="margin-left: 0; margin-top: 0; margin-bottom: 5px;"><b><u>Patient</u></b></h3>
             <p class="pat-name">@Html.DisplayFor(model => model.Image.patient.PatFName) @Html.DisplayFor(model => model.Image.patient.PatLName)</p>
             <p><b>@Html.DisplayNameFor(model => model.Image.patient.DOB)</b>&nbsp @Html.DisplayFor(model => model.Image.patient.DOB, "{0:dd/MM/yyyy}")</p>
-            <p><b>@Html.DisplayNameFor(model => model.Image.patient.Gender)</b>&nbsp @Html.DisplayFor(model => model.Image.patient.Gender)</p>
+            <p><b>@Html.DisplayNameFor(model => model.Image.patient.Gender)</b>&nbsp @if (Model.Image.patient.Gender == "M"){@Html.Label("Male", new { @style = "font-size: 16px" })} 
+            @if (Model.Image.patient.Gender == "F") { @Html.Label("Female", new { @style = "font-size: 16px" })}</p>
             <hr />
             <dl class="dl-horizontal-view">
                 <dt>@Html.DisplayName("Image Status:")</dt>
@@ -65,13 +66,13 @@
             <hr />
             @if (Model.Report != null)
             {
-                <label>Stomatologist Report:</label>
+                <label class="doc-exp-label">Stomatologist Report:</label>
                 <p>@Html.DisplayFor(model => model.Report.RepText)</p>
                 <hr />
             }
-            <label>Comment:</label>
+            <label class="doc-exp-label">Comment:</label>
             <br />
-            @if (Model.Image.ImgStatus != 5)
+            @if (Model.Image.ImgStatus != 3)
             {
                 using (Html.BeginForm())
                 {
