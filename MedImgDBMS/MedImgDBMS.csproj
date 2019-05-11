@@ -209,18 +209,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Context\ApplicationDataContext.cs" />
-    <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AdminPatController.cs" />
     <Compile Include="Controllers\AdminUserController.cs" />
-    <Compile Include="Controllers\BlogController.cs" />
-    <Compile Include="Controllers\ContactController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\DocExpController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\OtherController.cs" />
-    <Compile Include="Controllers\PortfolioController.cs" />
-    <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -444,54 +437,6 @@
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Home\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\About\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Services\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Contact\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Portfolio\OneColumn.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Portfolio\TwoColumn.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Portfolio\ThreeColumn.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Portfolio\FourColumn.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Portfolio\SingleItem.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Blog\Home1.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Blog\Home2.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Blog\Post.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Other\FullWidth.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Other\SideBar.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Other\Faq.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Other\FourOhFour.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
