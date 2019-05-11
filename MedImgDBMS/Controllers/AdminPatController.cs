@@ -116,7 +116,7 @@ namespace MedImgDBMS.Controllers
                new SelectListItem{Text="Female", Value = "F"},
             };
 
-            ViewBag.Gen = new SelectList(gender, "Value", "Text");         // Set gender dropdown list in viewbag
+            ViewBag.Gender = new SelectList(gender, "Value", "Text");         // Set gender dropdown list in viewbag
             ViewBag.userName = (from u in db.users
                                 where (u.UserID == userID)
                                 select u.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
@@ -130,9 +130,10 @@ namespace MedImgDBMS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(patient patient)
+        public ActionResult Create(patient patient, string Gender)
         {
             int userID = Convert.ToInt32(Session["UserID"].ToString());     // Get session user id
+            patient.Gender = Gender;
 
             if (ModelState.IsValid)         // Add patient
             {
@@ -142,6 +143,13 @@ namespace MedImgDBMS.Controllers
             }
 
             // If the model was invalid, display and do it over again
+            List<SelectListItem> gender = new List<SelectListItem>()     // Set columns for gender selection
+            {
+               new SelectListItem{Text="Male", Value = "M"},
+               new SelectListItem{Text="Female", Value = "F"},
+            };
+
+            ViewBag.Gender = new SelectList(gender, "Value", "Text");         // Set gender dropdown list in viewbag
             ViewBag.userName = (from u in db.users
                                 where (u.UserID == userID)
                                 select u.UserFName).FirstOrDefault().ToString();      // Passing user first name to view

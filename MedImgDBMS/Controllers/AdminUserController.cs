@@ -253,7 +253,7 @@ namespace MedImgDBMS.Controllers
             ViewBag.CurrentFilter = currentFilter;  // Create viewbag variable for current filter
             ViewBag.PreColumn = preColumn;          // Create viewbag variable for filtering column
             ViewBag.UserRoleID = new SelectList(db.roles, "RoleID", "RoleName", uaeModel.User.UserRoleID);                              // Pass role selection list with default value
-            ViewBag.AccountStatus = new SelectList(db.accountstatus, "AcctStatID", "AcctStatusName", uaeModel.Account.AcctStatus);      // Pass account status selection list with default value
+            ViewBag.AcctStatus = new SelectList(db.accountstatus, "AcctStatID", "AcctStatusName", uaeModel.Account.AcctStatus);      // Pass account status selection list with default value
             ViewBag.userName = (from u in db.users
                                 where (u.UserID == userID)
                                 select u.UserFName).FirstOrDefault().ToString();      // Passing user first name to view
