@@ -42,7 +42,7 @@ namespace MedImgDBMS.Controllers
             ViewBag.CurrentSort = sortOrder;        // Get current sorting
             ViewBag.TimeSortParm = String.IsNullOrEmpty(sortOrder) ? "create_time" : "";              // Sort by image create time
             ViewBag.PatFSortParm = sortOrder == "patient_first" ? "patient_first_desc" : "patient_first";   // Sort by patient first name
-            ViewBag.PatLSortParm = sortOrder == "patient_last" ? "patient_last_desc" : "patient_last_time"; // Sort by patient last name
+            ViewBag.PatLSortParm = sortOrder == "patient_last" ? "patient_last_desc" : "patient_last"; // Sort by patient last name
             ViewBag.StatSortParm = sortOrder == "img_status" ? "img_status_desc" : "img_status";            // Sort by image status
             ViewBag.userName = (from usr in db.users
                                 where (usr.UserID == userID)
