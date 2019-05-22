@@ -90,12 +90,12 @@
 
         @if (path != null)
         {
-            <label class="control-label col-md-2">Current Image</label>
+            <label class="img-deleteview" style="margin-left: 100px">Current Image</label>
             <br />
             <br />
             <div>
                 <img src="@Url.Content(@path)" class="img-deleteview" style="margin-left: 100px" />
-                <button class="btn btn-default" type="submit" name="rm" id="rm" value="change">Change Image</button>
+                @*<button class="btn btn-default" type="submit" name="rm" id="rm" value="change">Change Image</button>*@
             </div>
         }
         else
